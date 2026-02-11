@@ -1,0 +1,369 @@
+﻿ <!--fisheries-->
+<script>
+    var totalViolationWeightage = 0;
+    var RequiredAudits = new Array();
+    var isFormEidtMode = false;
+    var MainCatArray = [];
+
+    $(function () {
+        //debugger;
+        CreateAuditTemplate(Global.EstablishmentTypeID);
+
+        ss.InpsectionTimeSpent = new Date();
+        pleaseWait(false);
+    })
+    function GetAuditSubmittedData() {
+        if (Global.TeamLeaderID != lsUser.UserID && !Global.IsAssignToMe) {
+            $('#comments_ID').prop('disabled', true);
+        }
+
+        var data = { AuditServiceID: Global.AuditServiceID }
+        if (parseInt(Global.AuditServiceID) <= 0) {
+            return;
+        }
+        FetchService("post", config.GetAuditDetailsForm, JSON.stringify(data), true, function (r, xhr) {
+            if (r.IsSuccess) {
+                console.log(r.ResponseData);
+                var res = r.ResponseData[0];
+                Global.EstablishmentName = res.Establishment_NameAr;
+                $('#establishmentName').html(res.Establishment_NameAr);
+                if ((res.Total_Points != null && res.Total_Points != '') || res.Audit_AnimalDeptForm.length > 0) {
+                    $('#comments_ID').val(res.Remarks);
+                    //$('#btnSubmitInspection').text(Util.getTrans('_updateInspection'));
+                }
+                if (res.Audit_AnimalDeptForm.length > 0) {
+
+                    $.each(res.Audit_AnimalDeptForm, function (i, v) {
+                        $('#txtComment_' + v.LookupAuditDetailID).val(v.Comments);
+                        $('#inspectorName_' + v.LookupAuditDetailID).html("by " + v.InspectorName);
+                        $('#chk_' + v.LookupAuditDetailID).attr('data-updateid', v.ID);
+
+                        if (v.IsChecked) {
+                            var legislation = $('#chk_' + v.LookupAuditDetailID).attr('data-legislation');
+                            $('#chk_' + v.LookupAuditDetailID).attr('checked', true);
+                            $('#chkTop_' + legislation).attr('checked', true);
+                            if (v.InspectorID != lsUser.UserID) {
+
+                                $("#tr_" + legislation).find("input,textarea").prop('disabled', true);
+                            }
+                            //$('#tr_' + v.LookupAuditDetailID).css("background-color", 'rgb(236, 234, 234)');
+                            //totalViolationWeightage -= parseFloat($('#chk_' + v.LookupAuditDetailID).attr('data-violationweightage'));
+                        }
+                        if (v.InspectorID == lsUser.UserID) {
+                            debugger;
+                            $('#chk_' + v.LookupAuditDetailID).attr('data-inspectoredit', v.InspectorID);
+                            isFormEidtMode = true;
+                            $('#btnSubmitInspection').text(Util.getTrans('_updateInspection'));
+                        }
+                        else {
+                            // $('#tr_' + v.LookupAuditDetailID).find("input,textarea").prop('disabled', true);
+                        }
+                    });
+                    MainCatArray.forEach(function (v) {
+                        var checkbox = $('#chkTop_' + v).prop('checked');
+                        if (checkbox) {
+                            var weight = $('#chkTop_' + v).attr('data-violationweightage');
+                            totalViolationWeightage -= parseFloat(weight);
+                        }
+                    })
+                }
+                debugger;
+                UpdateTotalReult();
+                ss.ins_img = res.Audit_Attachment.length > 0 ? JSON.stringify(res.Audit_Attachment) : null;
+                GetImageControl();
+            }
+        });
+        if (Global.isAuditFormDisable) {
+            $('#btnSubmitInspection').hide();
+            $('#comments_ID').prop('disabled', true);
+            //$('#fromCreateAudit *').filter(':input').each(function (en, input) {
+            //    $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', true);
+            //});
+            $("#fromCreateAudit :input").prop("disabled", true);
+        }
+    }
+    function UpdateTotalReult() {
+        // $('#BlackPoints_ID').html(totalBlackPoints);
+        $('#TotalWeight_ID').html(Util.RoundNumber(totalViolationWeightage));
+    }
+
+    // Call Sort By Name
+
+    //<td><b><span data-tran="_inspector"></span></b></td>\
+    function CreateAuditTemplate(estabTypeID) {
+        var row = '';
+        var html = '<table class="table table-condensed table-responsive">\
+                <thead>\
+                    <tr>\
+                        <td><b><span data-tran="_table_number"></span></b></td>\
+                        <td><b><span data-tran="_table_ownerName"></span></b></td>\
+                        <td><b><span data-tran="_violationOfLaw"></span></b></td>\
+                        <td><b><span data-tran="_comment"></span></b></td>\
+                    </tr>\
+                </thead>\
+                <tbody id="setTemplateTbody"></tbody>\
+            </table>';
+        $('#setTemplate').html(html);
+        var data = JSON.stringify({ "EstablishmentTypeID": estabTypeID });
+
+        FetchService("post", config.GetAuditsLookup, data, false, function (r, xhr) {
+
+            $('#TopicAudit').html(r.ResponseData[0].EstablishmentTypeNameAr);
+            if (r.IsSuccess) {
+                var PrevLegislationNo = '';
+                var bp = r.ResponseData.length;
+                
+                r.ResponseData.sort(function (a, b) { 
+                    const valA = (a.LegislationNo || "").toString().trim();
+                    const valB = (b.LegislationNo || "").toString().trim();
+                     
+                    return valA.localeCompare(valB, undefined, {
+                        numeric: true,
+                        sensitivity: 'base'
+                    });
+                });
+                MainCatArray = Util.GetUniqueArray_JSON(r.ResponseData, "LegislationNo");
+                var percetage = (100 / MainCatArray.length);
+                $.each(r.ResponseData, function (i, v) {
+                    row = '';
+                    v.LegislationNo = v.LegislationNo == '' ? "v" : v.LegislationNo;
+
+                    var tableOwner = v.EvaluationEn == null ? "" : '<span style="color: #a57932;font-size:10px;display: block;"> &#8226; ' + v.EvaluationEn + '</span>';
+                    var attrbTop = 'data-legislationtop="' + v.LegislationNo + '" data-blackpoints="' + bp + '" data-violationweightage = "' + percetage + '" data-id="' + v.LegislationNo + '" data-updateid=0  data-inspectoredit=0';
+                    var attrbChild = 'data-legislation="' + v.LegislationNo + '" data-blackpoints="' + bp + '" data-violationweightage = "' + percetage + '" data-id="' + v.ID + '" data-updateid=0  data-inspectoredit=0';
+                    row += '<tr id="tr_' + v.LegislationNo + '">';
+                    if (v.LegislationNo != PrevLegislationNo) {
+                        row += '<td rowspan="2">' + v.LegislationNo + '</td>';
+                        row += '<td rowspan="2"><input type="checkbox" id="chkTop_' + v.LegislationNo + '" ' + attrbTop + ' class="chk-col-red"  >\
+                            <label style="font-size: 10px !important;" ' + attrbTop + ' onclick= "SelectCheckbox(this)" for="chkTop_' + v.LegislationNo + '"> ' + v.ParentEvaluation + tableOwner + '</label></td>';
+                        PrevLegislationNo = v.LegislationNo;
+                        totalViolationWeightage += parseFloat(percetage);
+                    }
+                    row += '<td ><input type="checkbox" id="chk_' + v.ID + '" ' + attrbChild + ' class="chk-col-red" disabled >\
+                            <label style="font-size: 10px !important;" ' + attrbChild + '  for="chk_' + v.ID + '"> ' + v.EvaluationAr + '</label></td>';
+
+                    row += '<td><textarea class="form-control" id="txtComment_' + v.ID + '" style="width: 80%;" cols="20" rows="1"></textarea>' +
+                        '<div style="font-size: 9px;color:red" id="inspectorName_' + v.ID + '"></div></td > ';
+                    //row += '<td></td>';
+                    //row += '<td style="font-size: 9px !important;"></td>';
+
+                    row += '</tr>';
+                    //totalBlackPoints = parseInt(bp);
+
+
+                    row = row.replace('null', '');
+                    row = row.replace('""', '');
+                    $('#setTemplateTbody').append(row);
+
+                })
+
+
+                UpdateTotalReult();
+            }
+
+            GetAuditSubmittedData();
+        });
+    }
+
+    function SelectCheckbox(e) {
+        debugger;
+
+        if (!e.control.disabled) {
+            var id = e.dataset.id;
+            //var blackPoint = e.dataset.blackpoints;
+            var violationWeightage = e.dataset.violationweightage;
+            var legislation = e.dataset.legislationtop;
+            //var days = e.dataset.days;
+            var checkbox = $('#chkTop_' + id).prop('checked');
+            debugger;
+            if (!checkbox) {
+                //$('#tr_' + id).css("background-color", 'rgb(236, 234, 234)');
+                totalViolationWeightage -= parseFloat(violationWeightage);
+                $("input[data-legislation='" + legislation + "']").prop('disabled', false);
+                $("input[data-legislation='" + legislation + "']").attr('data-inspectoredit', lsUser.UserID);
+            } else {
+                $('#tr_' + id).css("background-color", 'white');
+                totalViolationWeightage += parseFloat(violationWeightage);
+                $("input[data-legislation='" + legislation + "']").prop('disabled', true);
+                $("input[data-legislation='" + legislation + "']").prop('checked', false);
+                $("input[data-legislation='" + legislation + "']").attr('data-inspectoredit', '0');
+            }
+
+            UpdateTotalReult();
+            console.log(totalViolationWeightage);
+        }
+    }
+
+    function SubmitInpsection_forTeam() {
+        debugger;
+
+        var AuditDetailList = new Array();
+
+        $('#fromCreateAudit *').filter(':input').each(function (e, input) {
+            if (input.type == "checkbox" && input.id.indexOf('chkTop_') < 0) {
+                var ID = input.dataset.id;
+                var comments = $('#txtComment_' + ID).val().trim();
+                var isChecked = $('#chk_' + ID).prop('checked');
+                var inspID = $('#chk_' + ID).attr('data-inspectoredit');
+                if ((isChecked || comments != "") && inspID == lsUser.UserID) {
+                    AuditDetailList.push({
+                        AuditServiceID: Global.AuditServiceID,
+                        LookupAuditDetailID: ID,
+                        Comments: comments,
+                        IsChecked: isChecked,
+                        InspectorID: lsUser.UserID,
+                        updateID: $('#chk_' + ID).attr('data-updateid'),
+
+                    });
+                }
+            }
+        });
+
+        FetchService("post", config.PostAuditDetailsForm_forFishMarket, JSON.stringify(AuditDetailList), true, function (r, xhr) {
+            if (r.IsSuccess) {
+                debugger;
+                swal(Util.getTrans('_success'), Util.getTrans('_successDone'), 'success');
+                CloseModal('#model_AuditDetail');
+                // swal(Util.getTrans('_success'), msg, 'success');
+            } else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        })
+    }
+
+
+    function SubmitInpsection() {
+        debugger;
+        if ($('#comments_ID').val().trim() == "") {
+            swal('', Util.getTrans('_requiredField'), 'warning');
+            return false;
+        }
+        var AuditDetailList = new Array();
+        $('#fromCreateAudit *').filter(':input').each(function (e, input) {
+            if (input.type == "checkbox" && input.id.indexOf('chkTop_') < 0) {
+                var ID = input.dataset.id;
+                var comments = $('#txtComment_' + ID).val().trim();
+                var isChecked = $('#chk_' + ID).prop('checked');
+                var inspID = $('#chk_' + ID).attr('data-inspectoredit');
+                if ((isChecked || comments != "") && inspID == lsUser.UserID) {
+                    AuditDetailList.push({
+                        AuditServiceID: Global.AuditServiceID,
+                        LookupAuditDetailID: ID,
+                        Comments: comments,
+                        IsChecked: isChecked,
+                        InspectorID: lsUser.UserID,
+                        updateID: $('#chk_' + ID).attr('data-updateid'),
+                    });
+                }
+            }
+        });
+        var FormSubmitModel = {
+            AuditDetailList: AuditDetailList,
+            AuditServiceID: Global.AuditServiceID
+        };
+        var AuditService = {
+            Inspector_ID: lsUser.UserID,
+            ID: Global.AuditServiceID,
+            GPS_Cord: lat + "," + lng,
+           // Rating: Util.RoundNumber(totalViolationWeightage), 
+            Remarks: $('#comments_ID').val(),
+            TimeSpent: Util.TimeSpent(ss.InpsectionTimeSpent),
+            Total_Points: parseInt(Util.RoundNumber(totalViolationWeightage)),
+            Auto_Remarks: Util.getTrans("_totalPoints") + ": " + Util.RoundNumber(totalViolationWeightage),
+            ToEmp_ID: lsUser.UserID,
+            IsEditMode: isFormEidtMode,
+            RequiredAudits: [30],
+            IsFishMarket: true,
+
+        };
+        FetchService('post', config.UpdateAuditsService, JSON.stringify(AuditService), true, function (r, xhr) {
+            console.log(r);
+            if (r.IsSuccess) {
+                FetchService("post", config.PostAuditDetailsForm, JSON.stringify(FormSubmitModel), true, function (r, xhr) {
+                    if (r.IsSuccess) {
+                        debugger;
+                        msg = "Next visit is scheduled after 1 month ";
+                        swal(Util.getTrans('_success'), Util.getTrans('_successDone'), 'success');
+
+                        CloseModal('#model_AuditDetail');
+                        // swal(Util.getTrans('_success'), msg, 'success');
+                    } else {
+                        swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+                    }
+                })
+            } else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        });
+    }
+
+    function chooseSubmission() {
+        debugger;
+        if (Global.TeamLeaderID == lsUser.UserID && parseInt(Global.TeamLeaderID) > 0) {
+            SubmitInpsection();
+        } else {
+            SubmitInpsection_forTeam();
+        }
+    }
+    function SearchText() {
+        var val = $('#txtSearch').val();
+        if (val.length > 0) {
+            Util.SearchTextFromHTMLPage(val);
+        }
+    }
+
+</script>
+<form id="fromCreateAudit">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <span id="TopicAudit"> </span>
+            </h1>
+            <h3 style="text-align: center;margin-top:3px" id="establishmentName"> </h3>
+            <ul class="header-dropdown m-r--5">
+                <div><span data-tran="_totalWeight"></span>: <b id="TotalWeight_ID">0</b>%</div>
+                <!--<div>
+            <a href="javascript:void(0)" onclick="GetAuditSubmittedData()"> Sync </a>
+        </div>-->
+            </ul>
+            <div id="HistoryDataMarkeup"></div>
+            <div class="clearfix">
+                <div class="col-md-3">
+                    <input type="text" data-tran="_search" value="" id="txtSearch" class="form-control" />
+                </div>
+                <div class="col-md-5">
+                    <button type="button" value="Search" class="btn btn-success" onclick="SearchText()"><span data-tran="_search"></span></button>
+                </div>
+            </div>
+
+        </div>
+        <div class="body">
+
+            <div id="setTemplate"></div>
+            <div class="fishmarket-takeAction">
+                <b>
+                    <span data-tran="_actionRequired" style="font-size: 13px;"></span>:
+                </b>
+                <div style="padding-bottom: 3px;"><span data-tran="_fishMarket_ActionTaken_1"></span></div><span style="padding-top: 3px; border-top: 1px solid #dcdcdc;display: block;" data-tran="_fishMarket_ActionTaken_2"></span>
+            </div>
+            <div id="ImageControl"></div>
+            <div class="">
+                <b><span data-tran="_comment"></span></b>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">text_format</i>
+                    </span>
+                    <div class="form-line">
+                        <textarea type="text" class="form-control" name="comments_ID" id="comments_ID" rows="4" cols="100" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <button id="btnSubmitInspection" type="button" onclick="chooseSubmission(this); return false;"
+                        class="btn bg-green btn-block btn-lg waves-effect">
+                    <span data-tran="_submitInspection"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

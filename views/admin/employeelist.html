@@ -1,0 +1,106 @@
+﻿<form id="fromCreateAudit">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <span data-tran="_userManagment"> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5">
+                <a href="#views/admin/AddNewEmployee" class="btnAddIncident btn bg-green waves-effect" style="float:left;">
+                    <i class="material-icons">add</i>
+                    <span data-tran="_addNewEmployee"></span>
+                </a>
+            </ul>
+        </div>
+        <div class="body">
+
+            <table class="table table-responsive" data-page-size="25"></table>
+        </div>
+    </div>
+</form>
+
+<div class="modal fade" id="mdModalChangePreviliges" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:52% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel"> <span data-tran="_previliges"></span> -  (<span id="username"></span>)</h4>
+
+            </div>
+            <div class="modal-body" id="body_notificationList">
+                <div class="demo-masked-input">
+                    <div class="row clearfix">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Create Audits</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsCreateAudits"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Create Establisment</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsCreateEstablisment"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Create GroupInspection</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsCreateGroupInspection"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Create Incident</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsCreateIncident"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Show Incident</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsShowIncident"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Show Reports</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsShowReports"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Show Notification</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsShowNotification"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Show Inbox</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsShowInbox"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Show EmployeeList</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsShowEmployeeList"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Update Inspection Form</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsUpdateInspectionForm"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-6 m-b-10 ">
+                            <div class="demo-switch-title">Show Dashboard</div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chk_IsDashboard"><span class="lever switch-col-green"></span></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-id="" class="btnUpdatePrivliges btn btn-default waves-effect" data-dismiss="modal" onclick="UpdatePrivliges(this)"> <span data-tran="_update"></span></button>
+                <button type="button" class="btn btn-link waves-effect"   onclick="CloseModal('#mdModalChangePreviliges')"> <span data-tran="_close"></span></button>
+            </div>
+        </div>
+    </div>
+</div>

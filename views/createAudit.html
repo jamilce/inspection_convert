@@ -1,0 +1,261 @@
+﻿<form id="fromCreateAudit">
+    <div class="card animated fadeIn">
+        <div class="header">
+            <h1>
+                <span data-tran="_createNewAudit"> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5"></ul>
+        </div>
+        <div class="body" style="padding: 5px !important;">
+
+            <div id="gmap_markers" class="gmap" style="border: 2px solid #b68a35 !important;    border-radius: .6rem !important;">
+                <div class="preloader">
+                    <div class="spinner-layer pl-teal">
+                        <div class="circle-clipper left">
+                            <div class="circle"></div>
+                        </div>
+                        <div class="circle-clipper right">
+                            <div class="circle"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="demo-masked-input">
+                <div class="row clearfix">
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="border-left :1px solid #dcdcdc;">
+
+                        <!--<div class="col-lg-6 col-md-6 col-sm-6 col-xs-6 ">
+                            <div class="switch">
+                                <label>
+                                    <span data-tran="_inspection"></span>
+                                    <input type="checkbox" checked="" id="chk_isAudit" onchange="ChangeAuditOrInspection(this)">
+                                    <span class="lever"></span>
+                                    <span data-tran="_audit"></span>
+                                </label>
+                            </div>
+                        </div>-->
+                        <div class="col-md-6 ddInspectionType">
+                            <b><span data-tran="_type"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">assignment</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control chzn-select " id="ddInspectionType" onchange="ChangeAuditOrInspection(this)" name="ddInspectionType" style="width:100%"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 TeamRequired">
+                            <div class="demo-switch-title"><span data-tran="_teamRequired"></span></div>
+                            <div class="switch">
+                                <label>
+                                    <input type="checkbox" id="chkTeamRequired_general">
+                                    <span class="lever switch-col-indigo"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2  ">
+                            <div class="demo-switch-title"><span data-tran="_groupInspection"></span></div>
+                            <div class="switch">
+                                <label><input type="checkbox" id="chkGroupInspection"><span class="lever switch-col-red"></span></label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 ddDepartment">
+                            <b><span data-tran="_department"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">location_city</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control chzn-select " id="ddDepartment" onchange="onchange_ddDepartment(this)" name="DeptID" style="width:100%"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 ddGroupInspection">
+                            <b><span data-tran="_groupInspection"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">group</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control chzn-select " id="ddGroupInspection" name="GroupInspectionID" style="width:100%"></select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12 ddEmployee">
+                            <b><span data-tran="_employees"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">person</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control chzn-select" id="ddEmployee" name="ToEmp_ID" style="width:100%" onchange="onChange_Employee(this)"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" id="team_ID_general">
+                            <b><span data-tran="_team"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">group</i>
+                                </span>
+                                <div class="form-line">
+                                    <select id="dd_EmployeeList_general_team" name="To_TeamID" class="form-control chzn-select" multiple="multiple" style="width:100%"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <b><span data-tran="_establishmentType"></span></b>
+                            <!--<span><a href="javascript:void(0)" onclick="GetAuditForm()"> ( <span data-tran="_viewAuditForm"></span> )</a></span>-->
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">domain</i><span class="pl-red"> * </span>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control chzn-select" id="ddEstablishmentType" name="EstablishmentType_ID" onchange="onchange_ddEstbType(this)" style="width:100%"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 ddEmirate" style="display:none">
+                            <b><span data-tran="_emirate"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">location_city</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <select class="form-control chzn-select " id="ddEmirate" onchange="onchange_ddEmirate(this)" name="ddEmirate" style="width:100%"></select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 establish_box">
+                            <b><span data-tran="_establishment"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">business</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <div class="establish_eservice">
+                                        <input type="hidden" id="dd_establish_ID" name='Establishment_ID' />
+                                    </div>
+                                    <div class="establish_local">
+                                        <select class="form-control chzn-select" id="dd_establish_local_ID" name="Establishment_ID" style="width:100%" onchange="onchange_dd_establish_local(this)"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-12">
+                            <b><span data-tran="_date"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input id="FromDateTime_gi" name="DateStart" class="form-control datepicker" style="width: 100%" required />
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="col-md-12">
+                            <b><span data-tran="_toDate"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">date_range</i><span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input id="ToDateTime_gi" name="DateEnd" class="form-control datepicker" placeholder="" style="width:100%" required />
+                                </div>
+                            </div>
+                        </div>-->
+
+                        <div class="col-md-12">
+                            <b><span data-tran="_comment"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">text_format</i>
+                                </span>
+                                <div class="form-line">
+                                    <textarea type="text" class="form-control" name="Comments" id="comments_ID_create" rows="2" cols="100" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <button class="btn bg-green waves-effect" type="button" onclick="return CreateNewAudit()"><span data-tran="_send"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                        <div class="card">
+                            <div class="header">
+                                <h2>
+                                    <span data-tran="_upComingAudits"></span><small class="EstbCatName"></small>
+                                </h2>
+                                <!-- <ul class="header-dropdown m-r--5">
+                                    <li class="dropdown">
+                                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                            <i class="material-icons">more_vert</i>
+                                        </a>
+                                       <ul class="dropdown-menu pull-right">
+
+                                        </ul>
+                                    </li>
+                                </ul>-->
+                            </div>
+
+
+                            <div class="body">
+                                <div class="list-group NextVisitHistory">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>
+</form>
+
+
+
+<div class="modal fade" id="mdModalChangeDates" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:52% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel"> <span data-tran="_changeDates"></span></h4>
+
+            </div>
+            <div class="modal-body" id="body_notificationList">
+                <div class="col-md-6">
+                    <b><span data-tran="_date"></span></b>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">date_range</i><span class="pl-red"> *</span>
+                        </span>
+                        <div class="form-line">
+                            <input id="start_ChangeDate" name="DateStart" class="form-control datepicker"
+                                   style="width: 100%" required />
+                        </div>
+                    </div>
+                </div>
+                <!--<div class="col-md-6">
+                    <b><span data-tran="_toDate"></span></b>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">date_range</i><span class="pl-red"> *</span>
+                        </span>
+                        <div class="form-line">
+                            <input id="to_ChangeDate" name="DateEnd" class="form-control datepicker" placeholder="" style="width:100%" required />
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-id="" class="btnChangeDates btn btn-default waves-effect" data-dismiss="modal" onclick="UpdateChangeDate(this)"> <span data-tran="_update"></span></button>
+                <button type="button" class="btn btn-link waves-effect" onclick="CloseModal('#mdModalChangeDates',true)"> <span data-tran="_close"></span></button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,128 @@
+﻿<form id="fromCreateAudit">
+    <div class="card animated fadeIn">
+        <div class="header">
+            <h1>
+                <i class="material-icons">report</i> <span data-tran="_createJSR"> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5">
+                <button type="button" onclick="AddNewJSReport(this)" class="btn bg-brown btn-circle-lg waves-effect waves-circle waves-float">
+                    <i class="material-icons">add</i>
+                </button>
+            </ul>
+        </div>
+        <div class="body">
+            <div class="demo-masked-input">
+                <div class="row clearfix">
+
+                    <div class="col-lg-3 col-md-3 col-sm-6 ddDepartment">
+                        <b><span data-tran="_department"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ddDepartment" data-placeholder="أختر" onchange="onchange_ddDepartment(this)" name="DeptID" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ddEmployee">
+                        <b><span data-tran="_employees"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">person</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select" data-placeholder="أختر" id="ddEmployee" name="ToEmp_ID" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ddEmirate"  >
+                        <b><span data-tran="_emirate"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ddEmirate" onchange="onchange_ddEmirate(this)" name="ddEmirate" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 FromDateTime_gi">
+                        <b><span data-tran="_fromDate"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">date_range</i>
+                            </span>
+                            <div class="form-line">
+                                <input id="FromDateTime_gi" name="DateStart" class="form-control datepicker" style="width: 100%" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 ToDateTime_gi">
+                        <b><span data-tran="_toDate"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">date_range</i>
+                            </span>
+                            <div class="form-line">
+                                <input id="ToDateTime_gi" name="DateEnd" class="form-control datepicker" placeholder="" style="width:100%" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 txtRefno">
+                        <b><span data-tran="_refNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">short_text</i>
+                            </span>
+                            <div class="form-line">
+                                <input id="txtRefno" name="txtRefno" class="form-control" placeholder="e.g: JSR-240201" style="width:100%" required />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <button class="btn bg-green waves-effect" type="button" onclick="SearchReport()">
+                            <span data-tran="_search"></span>
+                        </button>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 ">
+                        <div class="totalRows" style="display:none;margin: 10px;">
+                            <a href="javascript:;" style="float: left;margin-top: -11px;" class="btn btn-default btn-circle waves-effect waves-circle waves-float" onclick="GetReportAllData('excel')">
+                                <i><img src="images/excel-icon.png" width="20"></i>
+                            </a>
+                            
+                            <span data-tran="_total" class="badge"></span><span class="badge">:</span> <span id="totalRows" class="badge"></span>
+                        </div>
+                        <div class="table table2excel">
+                        </div>
+                        <div id="dvTable" dir="rtl" style="text-align: right;"></div>
+                        <div class="LoadMore" style="display:none;text-align: center;cursor:pointer" data-toggle="tooltip"
+                             data-placement="top" data-original-title="تحميل المزيد">
+                            <i class="material-icons " onclick="LoadMore()">arrow_drop_down_circle</i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>
+</form>
+
+
+
+<div class="modal fade" id="mdModalAuditDetailList" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:52% !important">
+        <div class="modal-content">
+            <button type="button" class="btn btn-link waves-effect" style="background-color: beige;" onclick="CloseModal('#mdModalAuditDetailList')"> <span data-tran="_close"></span></button>
+            <h4 class="modal-title" id="defaultModalLabel" style=" text-align: -webkit-center;"> <span data-tran="_detial"></span></h4> 
+            <div class="modal-body" id="body_AuditDetailList">
+                 
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+</div>

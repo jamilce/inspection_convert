@@ -1,0 +1,412 @@
+﻿
+<script>
+    //12 - استمارة تقييم مصانع الاسمنت
+    var givenPoints = 0;
+    var totalBlackPoints = 0;
+    var TotalPercentage = 0;
+    var Grade = '';
+    var isImportantItemSelected = false;
+    var RequiredAudits = new Array();
+    var isFormEidtMode = false;
+    var MinimalValuePercentage = 0;
+    var TotalBlackPointsArray = new Array();
+    var rowSpan = [{ span: 3, value: 1 }, { span: 3, value: 2 }, { span: 2, value: 3 }, { span: 3, value: 5 }, { span: 3, value: 7 },
+    { span: 3, value: "7." }, { span: 3, value: "8" }, { span: 2, value: "9" }, { span: 2, value: "10" }, { span: 2, value: "12" }];
+
+    $(function () {
+        CreateAuditTemplate(Global.EstablishmentTypeID);
+
+        ss.InpsectionTimeSpent = new Date();
+        pleaseWait(false);
+    })
+    function GetAuditSubmittedData() {
+        var data = { AuditServiceID: Global.AuditServiceID }
+        if (parseInt(Global.AuditServiceID) <= 0) {
+            return;
+        }
+
+        FetchService("post", config.GetAuditDetailsForm, JSON.stringify(data), true, function (r, xhr) {
+            // debugger;
+            if (r.IsSuccess) {
+                console.log(r.ResponseData);
+                var res = r.ResponseData[0];
+                Global.EstablishmentName = res.Establishment_NameAr;
+                $('#establishmentName').html(res.Establishment_NameAr);
+                if ((res.Total_Points != null && res.Total_Points != '') || res.Audit_AnimalDeptForm.length > 0) {
+                    $('#comments_ID').val(res.Remarks);
+                    $('#btnSubmitInspection').text(Util.getTrans('_updateInspection'));
+                }
+                if (res.Audit_AnimalDeptForm.length > 0) {
+                    isFormEidtMode = true;
+                    $.each(res.Audit_AnimalDeptForm, function (i, v) {
+                        // debugger;
+                        $('#txtComment_' + v.LookupAuditDetailID).val(v.Comments);
+                        if (v.IsChecked) {
+                            $('#chk_' + v.LookupAuditDetailID).attr('data-updateid', v.ID);
+                            $('#chk_' + v.LookupAuditDetailID).attr('checked', true);
+                            $('#tr_' + v.LookupAuditDetailID).css("background-color", '#fff');
+                            $('#tr_' + v.LookupAuditDetailID).find("input,textarea,select").prop('disabled', false);
+                            $('#chk_' + v.LookupAuditDetailID).prop('disabled', false);
+
+                            $('#givenPoints_' + v.LookupAuditDetailID).val(v.GivenPoints);
+
+                            // $("input[name='rbg_" + v.LookupAuditDetailID + "'][value=" + v.Options + "]").prop('checked', true);
+                            var legestionNo = parseInt($('#givenPoints_' + v.LookupAuditDetailID).attr('data-cat'));
+                            var lgNo = $('#givenPoints_' + v.LookupAuditDetailID).attr('data-cat');
+                            CalculateTotalPoints('+', lgNo);
+                            UpdateTotalResult(legestionNo);
+
+                            MakeFormEnableDisable();
+                        }
+
+                    });
+                    CalulateTotalGivenPints();
+                    // debugger;
+                }
+                else {
+                    MakeFormEnableDisable();
+                }
+                debugger;
+                ss.ins_img = res.Audit_Attachment.length > 0 ? JSON.stringify(res.Audit_Attachment) : null;
+                GetImageControl();
+            }
+        });
+
+    }
+
+    function MakeFormEnableDisable() {
+        if (Global.isAuditFormDisable) {
+            $('#comments_ID').prop('disabled', true);
+            $('#btnSubmitInspection').hide();
+            $('#fromCreateAudit *').filter(':input').each(function (en, input) {
+                $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', true);
+            });
+        }
+    }
+    function UpdateTotalResult(givenPoints) {
+        $('.GivenPoints').html(givenPoints);
+        totalBlackPoints = 0;
+        TotalBlackPointsArray.forEach(function (v) {
+            if (v.count > 0) {
+                totalBlackPoints += v.point;
+            }
+        });
+
+        TotalPercentage = givenPoints * 100 / totalBlackPoints;
+        Grade = Util.getPercentageGrade(parseInt(TotalPercentage));
+        $('.Leastpercentage').html(totalBlackPoints);
+        $('.FinalEvaluation').html('<span class="finalEvalutionStyle" style="background-color:' + Util.getPercentageColor(TotalPercentage) + '"> ' +
+            Grade + '</span> <span>' + Util.RoundNumber(TotalPercentage) + '%</span>');
+    }
+
+    function CreateAuditTemplate(estabTypeID) {
+        // debugger;
+        var row = '';
+        var html = '<table class="table table-condensed" >\
+                <thead>\
+                    <tr>\
+                        <td><b><span data-tran="_articalNo"></span></b></td>\
+                        <td></td>\
+                        <td><b><span data-tran="_violationOfLaw"></span></b></td>\
+                        <td><b><span data-tran="_expectedRate"></span></b></td>\
+                         <td><b><span data-tran="_percentageDue"></span></b></td>\
+                        <td><b><span data-tran="_comment"></span></b></td>\
+                    </tr>\
+                </thead>\
+                <tbody id="setTemplateTbody"></tbody>\
+            </table>';
+        $('#setTemplate').html(html);
+        var data = JSON.stringify({ "EstablishmentTypeID": estabTypeID });
+        var OldArticalNo = 0; var articalNumber;
+
+        FetchService("post", config.GetAuditsLookup, data, false, function (r, xhr) {
+            $('#TopicAudit').html(Util.Localize(r.ResponseData[0].EstablishmentTypeNameAr, r.ResponseData[0].EstablishmentTypeNameEn));
+          
+            if (r.IsSuccess) {
+                //CalculateBlackPoints(r.ResponseData);
+                $.each(r.ResponseData, function (i, v) {
+                    // debugger;
+                    row = "";
+                    var rowspan = Util.findInJSONObject(rowSpan, { value: v.LegislationNo })[0];
+                    bgColor = i % 2 == 0 ? "#f1f5eb" : "#fff";
+                    if (OldArticalNo != v.LegislationNo) {
+                        OldArticalNo = articalNumber = v.LegislationNo;
+                        rowspan = rowspan == undefined ? '<td style="vertical-align: middle;text-align: center;">' + articalNumber.replace('.', '') + '</td>' : '<td style="vertical-align: middle;text-align: center;" rowspan="' + rowspan.span + '">' + articalNumber.replace('.', '') + '</td>';
+                    }
+                    else {
+                        articalNumber = "";
+                        rowspan = "";
+                    }
+                    var evaluation = lsUser.inslang == "ar" ? v.EvaluationAr : v.EvaluationEn;
+                    var blackPt = parseInt(v.RiskLevelID) == 1 ? "حسب نسبة الاستخدام" : v.BlackPoints;
+                    var attrb = ' data-risklevel="' + v.RiskLevelID + '" data-id="' + v.ID + '" data-blackpoints= "' + v.BlackPoints + '" data-cat="' + v.LegislationNo + '" data-updateid=0';
+                    row += '<tr id="tr_' + v.ID + '" style="background-color:' + bgColor + '">'
+                    row += rowspan;
+                    row += '<td><input type="checkbox" id="chk_' + v.ID + '" ' + attrb + ' class="chk-col-green"  onclick= "SelectCheckbox(this)">\
+                            <label ' + attrb + '  for="chk_' + v.ID + '"></label></td>';
+
+                    row += '<td>' + evaluation + '</td>';
+                    row += '<td>' + blackPt + '</td>';
+                    row += '<td style="width:10%"><input type="text" style="text-align: center;" class="form-control" onkeyup="CalulateTotalGivenPints(this)" data-risklevel="' + v.RiskLevelID + '" data-id="' + v.ID + '" data-cat=' + v.LegislationNo + ' id="givenPoints_' + v.ID + '" data-max="' + v.BlackPoints + '" /></td>';
+
+                    row += '<td><textarea class="form-control" id="txtComment_' + v.ID + '" style="width: unset;" cols="20" rows="1"></textarea></td>';
+                    row += '</tr>';
+
+                    row = row.replace(null, '');
+                    row = row.replace('null', '');
+                    row = row.replace('""', '');
+
+                    $('#setTemplateTbody').append(row);
+                    $('#tr_' + v.ID).find("input,textarea,select").prop('disabled', true);
+                    $('#chk_' + v.ID).prop('disabled', false);
+                    $('#tr_' + v.ID).css("background-color", 'rgb(236, 234, 234)');
+                })
+                row = '';
+                row += '<tr class="header-Topic">'
+                row += '<td colspan="3">  <span data-tran="_percentageDue"></span></td>';
+                row += '<td colspan="1" >  <span class="Leastpercentage">0</span></td>';
+                row += '<td colspan="1" >  <span class="GivenPoints"></span>    </td>';
+                row += '<td colspan="1" >  <span class="FinalEvaluation"></span>    </td>';
+
+                row += '</tr>';
+                $('#setTemplateTbody').append(row);
+
+                GetAuditSubmittedData();
+            }
+            else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        });
+    }
+
+    function CalulateTotalGivenPints(e) {
+        givenPoints = 0;
+        $('#fromCreateAudit *').filter('[data-cat]').each(function (e, input) {
+            // debugger;
+            var maxValue = parseInt(input.dataset.max);
+            var risklevel = parseInt(input.dataset.risklevel);
+            var cat = parseInt(input.dataset.cat);
+            //if (risklevel == 1 && !isNaN(input.value) && input.value.length > 0) {
+            //    givenPoints += (parseInt(input.value) / 100);
+            //}
+            //else
+            if (!isNaN(input.value) && input.value.length > 0 && input.value != "" && input.value <= maxValue) {
+                givenPoints += parseInt(input.value);
+            }
+            else {
+                input.value = '';
+            }
+        });
+
+        UpdateTotalResult(givenPoints);
+
+    }
+
+    function CalculateTotalPoints(Operation, cat) {
+        // if (cat == 15) return false;
+        //duplicate 7 ...should be replaced with No 20 in array to remove duplication.
+        cat = cat == "7." ? 20 : parseInt(cat);
+        var isExist = TotalBlackPointsArray.filter(function (r) { return r.cat == cat });
+        if (Operation == "-") {
+            if (isExist.length > 0) {
+                TotalBlackPointsArray.forEach(function (v) {
+                    if (v.cat == cat) {
+                        v.count = v.count - 1;
+                    }
+                })
+            }
+        }
+        else {
+            if (isExist.length > 0) {
+                TotalBlackPointsArray.forEach(function (v) {
+                    if (v.cat == cat) {
+                        v.count = v.count + 1;
+                    }
+                })
+
+            } else {
+                TotalBlackPointsArray.push({ cat: cat, point: 100, count: 1 });
+            }
+        }
+    }
+
+    function SelectCheckbox(e) {
+        debugger;
+        if (e.id.substr(0, 3) == "chk") {
+            var id = e.id.substr(4);
+
+            var cat = e.dataset.cat;
+            var bp = parseInt(e.dataset.blackpoints);
+
+
+            if (!e.checked) {
+                $('#tr_' + id).find("input,textarea,select").prop('disabled', true);
+                // $('#chk_' + id).prop('checked', false);
+                $('#chk_' + id).prop('disabled', false);
+                $('#tr_' + id).css("background-color", 'rgb(236, 234, 234)');
+                $('#givenPoints_' + id).val('');
+                CalculateTotalPoints('-', cat);
+            } else {
+                $('#tr_' + id).find("input,textarea,select").prop('disabled', false);
+                //$('#chk_' + id).prop('checked', false);
+                $('#chk_' + id).prop('disabled', false);
+                $('#tr_' + id).css("background-color", 'white');
+                CalculateTotalPoints('+', cat);
+            }
+
+            CalulateTotalGivenPints();
+        }
+    }
+
+    function SubmitInpsection() {
+        debugger;
+
+        if ($('#comments_ID').val().trim() == "") {
+            swal('', Util.getTrans('_requiredField'), 'warning');
+            return false;
+        }
+        var AuditDetailList = new Array();
+
+        $('#fromCreateAudit *').filter(':input').each(function (e, input) {
+            if (input.type == "checkbox") {
+                var ID = input.dataset.id;
+                var comments = $('#txtComment_' + ID).val();
+                var isChecked = $('#chk_' + ID).prop('checked');
+                var givenPoint = $('#givenPoints_' + ID).val();
+                //var options = $("input[name='rbg_" + ID + "']:checked").val();
+                if (isChecked || givenPoint != "") {
+                    AuditDetailList.push({
+                        AuditServiceID: Global.AuditServiceID,
+                        LookupAuditDetailID: ID,
+                        Comments: comments,
+                        IsChecked: isChecked,
+                        //Options: options,
+                        GivenPoints: givenPoint,
+                        updateID: $('#chk_' + ID).attr('data-updateid'),
+                    });
+                }
+            }
+        })
+        var FormSubmitModel = {
+            AuditDetailList: AuditDetailList,
+            AuditServiceID: Global.AuditServiceID
+        };
+        //var autocoments = Util.FixFloatNumber(TotalPercentage);
+
+        var RA = CalculateNextVisit();
+        var AuditService = {
+            Inspector_ID: lsUser.UserID,
+            ID: Global.AuditServiceID,
+            GPS_Cord: lat + "," + lng,
+            //NextVisit_Date: new Date(),
+            Rating: Grade,
+            Remarks: $('#comments_ID').val(),
+            Auto_Remarks: Util.RoundNumber(givenPoints) + "",
+            TimeSpent: Util.TimeSpent(ss.InpsectionTimeSpent),
+            Total_Points: parseInt(TotalPercentage),
+            RiskLevel_ID: CalculateRiskLevel(Grade),
+            ToEmp_ID: lsUser.UserID,
+            IsEditMode: isFormEidtMode,
+            RequiredAudits: RA,
+            IsEnviroTaqeem: true,
+        };
+        //console.log(AuditDetailList);
+        $('#btnSubmitInspection').prop('disabled', true);
+        FetchService('post', config.UpdateAuditsService, JSON.stringify(AuditService), true, function (r, xhr) {
+            console.log(r);
+            if (r.IsSuccess) {
+                FetchService("post", config.PostAuditDetailsForm, JSON.stringify(FormSubmitModel), true, function (r, xhr) {
+                    if (r.IsSuccess) {
+                        // debugger;
+                        var msg = ''; var daysMsg = '';
+                        $.each(RA, function (i, v) {
+                            daysMsg += Util.AddDays(v) + ",";
+                        });
+                        daysMsg = daysMsg.substr(0, daysMsg.length - 1);
+                        msg = Util.getTrans('_nextVisitSchdule') + daysMsg + " ";
+                        //
+                        CloseModal('#model_AuditDetail');
+                        swal(Util.getTrans('_success'), Util.getTrans('_successDone'), 'success');
+                        //swal(Util.getTrans('_success'), msg, 'success');
+                    } else {
+                        $('#btnSubmitInspection').prop('disabled', false);
+                        swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+                    }
+                })
+            } else {
+                $('#btnSubmitInspection').prop('disabled', false);
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        });
+        return false;
+    }
+    function CalculateRiskLevel(Grade) {
+        if (Grade == "A") {
+            return 3;
+        }
+        else if (Grade == "B") {
+            return 2;
+        }
+        else if (Grade == "C") {
+            return 1;
+        }
+        else if (Grade == "D") {
+            return 1;
+        }
+    }
+    function CalculateNextVisit() {
+        //A = mar31 / june30 ------ 30 sep / 30nov
+        //B = 31 jan / 28 feb / mar31 / apr30 / may31 / 30june-------- july31 / aug31 / sep30 / oct31 / nov30/ 31dec
+        //C, D =
+        //15 jan, 30 jan
+        //15 feb, 28 feb
+        //15 mar, 31 mar
+        //15 apr, 30 apr
+        //15 may, 31 may
+        //15 july, 31 july
+        //15 sep, 30 sep
+        //15 oct, 30 oc
+        //15 nov, 30 nov
+        if (Grade == "A") {
+            return [87, 179];
+        }
+        else if (Grade == "B") {
+            return [28, 57, 87, 117, 147, 179]; // feb,mar,apr,may,june,july
+        }
+        else if (Grade == "C" || Grade == "D") {
+            return [14, 29, 45, 57, 73, 87, 103, 117, 133, 147, 164, 179];
+        }
+    }
+</script>
+<div id="fromCreateAudit">
+    <div class="card">
+        <div class="header" style="text-align: center;">
+            <h1>
+                <span id="TopicAudit"> </span>
+            </h1>
+            <h3 style="text-align: center;margin-top:3px" id="establishmentName"> </h3>
+            <div id="HistoryDataMarkeup"></div>
+        </div>
+        <div class="body">
+            <div id="setTemplate"></div>
+            <div id="ImageControl"></div>
+            <div class="">
+                <b><span data-tran="_comment"></span></b>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">text_format</i>
+                    </span>
+                    <div class="form-line">
+                        <textarea type="text" class="form-control" name="comments_ID" id="comments_ID" rows="4" cols="100" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <button id="btnSubmitInspection" type="button" onclick="return SubmitInpsection(this)"
+                        class="btn bg-green btn-block btn-lg waves-effect">
+                    <span data-tran="_submitInspection"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

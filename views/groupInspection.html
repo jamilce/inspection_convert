@@ -1,0 +1,118 @@
+﻿<form id="fromCreateAudit23">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <span data-tran="_groupInspection"> </span>
+            </h1>
+
+            <ul class="header-dropdown m-r--5">
+                <button style="display:none" type="button" onclick="CancelUpdate(this)" class="btnCancelUpdate btn bg-red btn-circle-lg waves-effect waves-circle waves-float">
+                    <i class="material-icons">cancel</i>
+                </button>
+                <button type="button" onclick="AddGroupInspection(this)" class="btn bg-brown btn-circle-lg waves-effect waves-circle waves-float">
+                    <i class="material-icons">add</i>
+                </button>
+
+            </ul>
+
+        </div>
+        <div class="body">
+
+            <div class="demo-masked-input">
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_department"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ddDepartment" data-placeholder="أختر" onchange="onchange_ddDepartment(this)" name="DeptID" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_emirate"></span></b><span class="pl-red"> *</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select" id="ddEmirate" name="EmirateId"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_NameAr"></span></b><span class="pl-red"> *</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">text_format</i>
+                            </span>
+                            <div class="form-line">
+                                <input class="form-control" id="txtGroupInspectionName_Ar" name="txtGroupInspectionName_Ar" />
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_NameEn"></span></b><span class="pl-red"> *</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">text_format</i>
+                            </span>
+                            <div class="form-line">
+                                <input class="form-control" id="txtGroupInspectionName_En" name="txtGroupInspectionName_En" />
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_date"></span></b><span class="pl-red"> *</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">date_range</i>
+                            </span>
+                            <div class="form-line">
+                                <input id="FromDateTime_gi" name="DateStart" class="form-control datepicker"
+                                       style="width: 100%" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12" id="team_ID_general">
+                        <b><span data-tran="_team"></span></b><span class="pl-red"> *</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">group</i>
+                            </span>
+                            <div class="form-line">
+                                <select id="dd_EmployeeList_general_team" name="To_TeamID" class="form-control chzn-select" multiple="multiple"
+                                        style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 ">
+                        <b><span data-tran="_comment"></span></b><span class="pl-red"> *</span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">text_format</i>
+                            </span>
+                            <div class="form-line">
+                                <textarea type="text" class="form-control" name="Comments" id="comments_ID_gins" rows="2" cols="100" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 ">
+                        <div class="table">
+                        </div>
+                        <div class="LoadMore" style="display:none;text-align: center;cursor:pointer" data-toggle="tooltip"
+                             data-placement="top" data-original-title="تحميل المزيد">
+                            <i class="material-icons " onclick="LoadMore()">arrow_drop_down_circle</i>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</form>

@@ -1,0 +1,289 @@
+﻿<form id="fromCreateAudit1">
+    <div class="card">
+        <!--<div class="header">
+            <h1>
+                <span data-tran=""> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5"></ul>
+        </div>-->
+        <div class="body">
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" id="inboxOnClick">
+                    <a href="#_inboxText" data-toggle="tab" aria-expanded="false">
+                        <i class="material-icons">inbox</i> <span data-tran="_inboxText"> </span> <span class="totalItem_inbox"></span>
+                    </a>
+                </li>
+                <li role="presentation" class="" id="sentOnClick">
+                    <a href="#_sentItem" data-toggle="tab" aria-expanded="false">
+                        <i class="material-icons">assignment</i> <span data-tran="_allTask"> </span> <span class="totalItem_sent"></span>
+                    </a>
+                </li>
+                <!--<li role="presentation" class="" id="pendingOnClick">
+                    <a href="#_pendingItem" data-toggle="tab" aria-expanded="false">
+                        <i class="material-icons">update</i> <span data-tran="_pendingItem"> </span> <span class="totalItem_pending"></span>
+                    </a>
+                </li>-->
+                <!--<li role="presentation" class="" id="completedOnClick">
+                    <a href="#_completedItem" data-toggle="tab" aria-expanded="true">
+                        <i class="material-icons">done_all</i> <span data-tran="_completedItem"> </span> <span class="totalItem_completed"></span>
+                    </a>
+                </li>-->
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active in fade" id="_inboxText">
+                    <a href="javascript:;" onclick="OpenPopupSearchInbox('inbox')" class="btn btn-moccae">
+                        <span data-tran="_search"></span><i class="material-icons">search</i>
+                    </a>
+                    <a href="javascript:;" onclick="SearchPop.ResetSearch('inbox')" class="btn btn-moccae resetSearch_inbox" style="display:none">
+                        <i class="material-icons">close</i>
+                    </a>
+                    <div class="row clearfix">
+
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+                                <!--<div class="header">
+                                    <h4>
+                                        <span data-tran="_inboxText"> </span> <span class="totalItem_inbox"></span>
+                                    </h4>
+                                </div>-->
+                                <div class="body">
+                                    <div class="list-group inbox">
+                                        <center>
+                                            <div class="preloader pl-size-sm">
+                                                <div class="spinner-layer pl-brown">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="LoadMore_inbox" style="display:none;text-align: center;cursor:pointer" data-toggle="tooltip"
+                                         data-placement="top" data-original-title="تحميل المزيد">
+                                        <i class="material-icons " onclick="LoadMoreInbox('inbox')">arrow_drop_down_circle</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="divInsForm_inbox">
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="_sentItem">
+                    <a href="javascript:;" onclick="OpenPopupSearchInbox('sent')" class="btn btn-moccae">
+                        <span data-tran="_search"></span><i class="material-icons">search</i>
+                    </a>
+                    <a href="javascript:;" onclick="SearchPop.ResetSearch('sent')" class="btn btn-moccae resetSearch_sent" style="display:none">
+                        <i class="material-icons">close</i>
+                    </a>
+                    <div class="row clearfix">
+
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+
+                                <div class="body">
+                                    <div class="list-group sent">
+                                        <center>
+                                            <!--<div class="preloader pl-size-sm">
+                                                    <div class="spinner-layer pl-brown">
+                                                        <div class="circle-clipper left">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                        <div class="circle-clipper right">
+                                                            <div class="circle"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>-->
+                                        </center>
+                                    </div>
+                                    <div class="LoadMore_sent" style="display:none;text-align: center;cursor:pointer" data-toggle="tooltip"
+                                         data-placement="top" data-original-title="تحميل المزيد">
+                                        <i class="material-icons " onclick="LoadMoreInbox('sent')">arrow_drop_down_circle</i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="divInsForm_sent">
+                        </div>
+                    </div>
+                </div>
+
+                <!--<div role="tabpanel" class="tab-pane fade" id="_pendingItem">
+                    <div class="row clearfix">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+
+                                <div class="body">
+                                    <div class="list-group pending">
+                                        <center>
+                                            <div class="preloader pl-size-sm">
+                                                <div class="spinner-layer pl-brown">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="pagination">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="divInsForm_pending">
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade " id="_completedItem">
+                    <div class="row clearfix">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+
+                                <div class="body">
+                                    <div class="list-group completed">
+                                        <center>
+                                            <div class="preloader pl-size-sm">
+                                                <div class="spinner-layer pl-brown">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="pagination">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="divInsForm_completed">
+                        </div>
+                    </div>
+                </div>-->
+            </div>
+
+        </div>
+    </div>
+</form>
+
+
+<div class="modal fade" id="mdModalInboxSearch" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width:52% !important">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="defaultModalLabel"> <span data-tran="_search"></span></h4>
+
+            </div>
+            <div class="modal-body" id="body_InboxSearch">
+
+                <div class="body">
+                    <div class="demo-masked-input">
+                        <div class="row clearfix">
+                            <div class="col-md-3 ddInspectionType">
+                                <b><span data-tran="_type"></span></b>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select class="form-control chzn-select " id="ddInspectionType" onchange="SearchPop.ChangeAuditOrInspection(this)" name="ddInspectionType" style="width:100%"></select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-3 ddDepartment">
+                                <b><span data-tran="_department"></span></b>
+                                <div class="input-group">
+
+                                    <div class="form-line">
+                                        <select class="form-control chzn-select " id="ddDepartment" onchange="SearchPop.onchange_ddDepartment(this)" name="DeptID" style="width:100%"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 ddEmployee">
+                                <b><span data-tran="_employees"></span></b>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select class="form-control chzn-select " id="ddEmployee" name="ddEmployee" style="width:100%"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <b><span data-tran="_establishmentType"></span></b>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <select class="form-control chzn-select " id="dd_EstablishmentTypeID" name="dd_EstablishmentTypeID" style="width:100%"></select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <b><span data-tran="_refNo"></span></b>
+                                <div class="input-group">
+                                    <div class="form-line">
+                                        <input type="text" class="form-control" name="RefNo" id="RefNo" placeholder="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn bg-brown waves-effect" style="padding: 4px 13px;margin-top: 19px;" onclick="SearchPop.MailBoxSearch(this)">
+                                    <i class="material-icons" style="vertical-align: text-top;">search</i>
+                                    <span data-tran="_search"> </span>
+                                </button> 
+
+                            </div>
+                            <hr />
+                            <br />
+                            <!--  <div class="col-md-4">
+                                            <a class="" style="display: block;padding-top: 34px;" role="button" data-toggle="collapse" href="#collapseExample" aria-expanded="true" aria-controls="collapseExample">
+                                                <span data-tran="_advanceSearch"></span>
+                                            </a>
+                                        </div>
+                                        <div class="col-md-12">
+                                <div class="collapse" id="collapseExample" aria-expanded="true" style="">
+                                    <div class="col-md-3">
+                                        <b><span data-tran="_status"></span></b>
+                                        <div class="input-group">
+
+                                            <div class="form-line">
+                                                <select class="form-control chzn-select" id="ddStatus" name="ddStatus"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <b><span data-tran="_fromDate"></span></b>
+                                        <div class="input-group">
+
+                                            <div class="form-line">
+                                                <input type="text" class="form-control datepicker" name="StartDate" id="StartDate" placeholder="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <b><span data-tran="_toDate"></span></b>
+                                        <div class="input-group">
+
+                                            <div class="form-line">
+                                                <input type="text" class="form-control datepicker" name="EndDate" id="EndDate" placeholder="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link waves-effect" onclick="CloseModal('#mdModalInboxSearch',true)"> <span data-tran="_close"></span></button>
+            </div>
+        </div>
+    </div>
+</div>
+

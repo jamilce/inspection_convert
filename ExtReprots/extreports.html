@@ -1,0 +1,182 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title> MOCCAE Audit System Reports </title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <!-- Bootstrap Core Css -->
+    <link href="../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- Waves Effect Css -->
+    <link href="../plugins/node-waves/waves.css" rel="stylesheet" />
+    <link href="../plugins/animate-css/animate.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="../css/style.css" rel="stylesheet">
+
+    <!--  You can choose a theme from css/themes instead of get all themes -->
+    <link href="../css/themes/all-themes.css" rel="stylesheet" />
+    <link href="../css/themes/theme-green.min.css" rel="stylesheet" />
+    <link href="../plugins/light-gallery/css/lightgallery.css" rel="stylesheet">
+    <!-- Bootstrap Material Datetime Picker Css -->
+    <link href="../plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <link href="../plugins/chosen/chosen.css" rel="stylesheet" />
+    <!-- Sweetalert Css -->
+    <link href="../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+
+    <!-- Jquery Core Js -->
+    <script src="../plugins/jquery/jquery.min.js"></script>
+    <script src="../js/Jquery.cookies.js"></script>
+    <!-- Bootstrap Core Js -->
+    <script src="../plugins/bootstrap/js/bootstrap.js"></script>
+    <!-- Select Plugin Js -->
+    <!--<script src="~//plugins/bootstrap-select/js/bootstrap-select.js"></script>-->
+    <!-- Slimscroll Plugin Js -->
+    <script src="../plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+    <!-- Waves Effect Plugin Js -->
+    <script src="../plugins/node-waves/waves.js"></script>
+    <!-- Autosize Plugin Js -->
+    <script src="../plugins/autosize/autosize.js"></script>
+    <!-- Moment Plugin Js -->
+    <script src="../plugins/momentjs/moment.js"></script>
+    <script src="../plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js"></script>
+     
+    <!-- Custom Js -->
+    <script src="../js/admin.js"></script>
+    <!-- Demo Js -->
+    <script src="../js/demo.js"></script>
+    <script src="../plugins/chosen/chosen.jquery.js"></script>
+    <!-- SweetAlert Plugin Js -->
+    <script src="../plugins/sweetalert/sweetalert-dev.js"></script>
+    <script src="../js/pages/ui/modals.js"></script>
+    <script src="../js/pages/ui/dialogs.js"></script>
+    <script src="../js/pages/ui/notifications.js"></script>
+    <script src="../plugins/bootstrap-notify/bootstrap-notify.js"></script>
+    <script src="../plugins/light-gallery/js/lightgallery-all.js"></script>
+    <link href="../css/select2/select2.css" rel="stylesheet" />
+    <script src="../js/select2.js"></script>
+
+    <link href="../plugins/bootstrap-table/css/footable.bootstrap.min.css" rel="stylesheet" />
+    <script src="../plugins/bootstrap-table/js/footable.min.js"></script>
+    <script src="../js/jquery.validate.min.js"></script>
+    <script src="../Setting.js?v=1.7"></script>
+    <script src="../js/config.js?v=1.7"></script>
+
+
+</head>
+<!--mainSection-->
+<body class="theme-orange">
+
+    <div class="modal fade" id="model_showDeatil" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <a class="btn btn-link waves-effect" data-dismiss="modal"
+                   style="background-color: beige;">
+                    <span data-tran="_close"></span>
+                </a>
+                <div class="modal-body" id="ubody">
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="model_AuditDetail" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document" style="width:calc(100% - 25px) !important;">
+            <div class="modal-content">
+                <a class="btn btn-link waves-effect" data-dismiss="modal" style="background-color: beige;">
+                    <span data-tran="_close"></span>
+                </a>
+                <div class="modal-body" id="ubody_AuditDetail">
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="mdModalNotification" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document" style="width:82% !important">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="defaultModalLabel"> NOTIFICATIONS</h4>
+
+                </div>
+                <div class="modal-body" id="body_notificationList">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal"> close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+
+                </div>
+            </div>
+            <p><span data-tran="_pleaseWait"></span></p>
+            <div>
+                <a href="javascript:void(0)" onclick="disableLoading()">
+                    <span data-tran="_cancel"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+
+   
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+        <!-- #END# Left Sidebar -->
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div id="mainSection"></div>
+            <br /><br /><br />
+
+        </div>
+    </section>
+
+    <script src="../lib/translation.js?v=1.7"></script>
+    <script src="extreports.js?v=1.7"></script>
+    <style>
+        body {
+            background-color: #fff !important;
+        }
+
+        section.content {
+            margin: 14px !important;
+        }
+    </style>
+</body>
+</html>

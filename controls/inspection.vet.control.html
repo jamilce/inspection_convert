@@ -1,0 +1,285 @@
+﻿
+<style>
+    input[type="file"] {
+        display: block;
+    }
+</style>
+<script type="text/javascript">
+    var isFormEidtMode = false;
+
+    $(function () {
+        try {
+            //debugger;
+            //Global.EstablishmentTypeID = 39;
+            var url = config.GetInspectionQuestion + Global.EstablishmentTypeID;
+            CreateInspectionForm(url);
+
+        }
+        catch (e) {
+            console.log(e);
+        }
+    });
+    function GetAuditSubmittedData() {
+        //if (parseInt(Global.AuditServiceID) <= 0) { return false; }
+        // //debugger;
+        var data = { AuditServiceID: Global.AuditServiceID }
+
+        FetchService("post", config.GetInspectionDetailsForm, JSON.stringify(data), true, function (r, xhr) {
+            if (r.IsSuccess) {
+                //debugger;
+                console.log(r.ResponseData);
+                var res = r.ResponseData[0];
+                $('#comments_ID').val(res.Remarks);
+                //if (res.InspectionForm.length > 0) {
+                isFormEidtMode = true;
+                // $('#btnSubmitInspection').text(Util.getTrans('_updateInspection'));
+                $.each(res.InspectionForm, function (i, v) {
+                    $('#txtComment_' + v.InspectionFormID).val(v.Comments);
+                    $('#chk_' + v.InspectionFormID).attr('data-updateid', v.ID);
+                    $('#tr_' + v.InspectionFormID).css("background-color", 'rgb(236, 234, 234)');
+                    if (v.IsChecked) {
+                        $('#chk_' + v.InspectionFormID).attr('checked', false);
+                    }
+                });
+                if (res.RiskLevel_ID != null) {
+                    var rn = res.RiskLevel_ID == RiskLevelID.HighRisk ? Util.getTrans('_reject') : Util.getTrans('_aprove');  //Util.Localize(res.RiskLevel_NameAr, res.RiskLevel_NameEn);
+                    $('#InspectionResult_Div').html(rn);
+                    $('#InspectionResult_Div').css('background-color', res.RiskColor);
+                }
+                ss.ins_img = res.Audit_Attachment.length > 0 ? JSON.stringify(res.Audit_Attachment) : null;
+                GetImageControl();
+                //  }
+            }
+        });
+        if (Global.isAuditFormDisable || Global.ExtRepot) {
+            $('#btnSubmitInspection1').hide();
+            $('#btnSubmitInspection2').hide();
+            $('#btnSubmitInspection3').hide();
+            $('#comments_ID').prop('disabled', true);
+
+            $('#fromCreateAudit *').filter(':input').each(function (en, input) {
+                $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', true);
+            });
+        }
+
+    }
+
+
+    function CreateInspectionForm(url) {
+        try {
+            var html_text = ''; var Pre_artical; var span = 1; var spanArr = new Array(); var cycle = 1;
+
+            FetchService("GET", url, null, false, function (r, xhr) {
+                console.log(r, xhr);
+                ////debugger;
+                html_text = '<table class="table  table-condensed"><tbody>';
+                $.each(r.ResponseData, function (index, value) {
+                    var NAME = Util.GetProperName(value);
+                    var artical = value.ArticalNo == null ? "" : value.ArticalNo;
+
+                    if (value.generation == 0 && value.Type === 'label') {
+                        $('#TopicName_ID').html(NAME);
+                        $('#DocNo_ID').html(value.DocNo);
+                    }
+                    else {
+                        html_text += value.Type == 'checkbox' ? '<tr class="" id="tr_' + value.ID + '" >' : '<tr class="active" id="tr_' + value.ID + '">';
+                        // //debugger;
+                        if (artical != Pre_artical) {
+                            html_text += '<td  id="span_id_' + cycle + "_" + artical + '" rowspan=""  style="text-align: center; width: 5% !important;vertical-align: middle;">' + artical + '</td>';
+
+                            if (span > 1) {
+                                spanArr.push({ "artical": Pre_artical, "span": span, "cycle": cycle - 1 });
+                            }
+                            Pre_artical = artical;
+                            span = 1;
+                            cycle++;
+                        }
+                        else {
+                            span++;
+                        }
+                        if (value.Type === 'label') {
+                            html_text += '\
+                                        <td colspan="3" style="font-weight: bold;"><span> &#x25cf; </span>' + NAME + '</td>\
+                                          ' ;
+                        }
+                        else if (value.Type === 'checkbox') {
+
+                            // html_text += '<tr class="">';
+                            html_text += '<td>\
+                                            <div class="switch">\
+                                            <label> <input name="' + value.ID + '" id="chk_' + value.ID + '" data-id="' + value.ID + '" data-updateid="0" type="checkbox" checked >\
+                                                <span class="lever switch-col-green inspection-checkbox"></span></label>\
+                                            \
+                                            <label for="chk_' + value.ID + '"  data-id="' + value.ID + '"> ' + NAME + '</label></div>\
+                                         </td>\
+                                         <td><textarea class="form-control" id="txtComment_' + value.ID + '" style="width: unset;" cols="20" rows="2"></textarea></td>';
+                        }
+                        else if (value.Type == "warning") {
+                            html_text += ' \
+                                        <td colspan="3" style="font-weight: bold;color:#e45454;padding: 10px 35px;font-size: 13px;"><span> &ndash;  </span>' + NAME + '</td>\
+                                          ' ;
+                        }
+                        else {
+                            html_text += ' </td> ';
+                        }
+                    }
+
+                    html_text += ' </tr>';
+                })
+                html_text += '</tbody> </table>';
+
+                html_text = html_text.replace(/•/gi, ' </br> •');
+                html_text = html_text.replace(/التجهيزات: -/gi, '<strong>التجهيزات: -</strong>');
+                html_text = html_text.replace(/المواصفات: -/gi, '<strong> المواصفات: -</strong>');
+
+
+                $('#InspectionQuestion_div').html(html_text);
+                //  //debugger;
+                spanArr.forEach(function (val, i) {
+                    $('#span_id_' + val.cycle + "_" + val.artical).attr("rowspan", val.span);
+                    if (parseInt(val.span) > 1) {
+                        $('#span_id_' + val.cycle + "_" + val.artical).css('background-color', '#e0e0e0');
+                    }
+                })
+                GetAuditSubmittedData();
+
+            });
+        } catch (e) {
+            console.log(e);
+        }
+        return false;
+    }
+
+    function SubmitInspection(e) {
+        //debugger;
+        var RiskLevel = e.dataset.type;
+        if ($('#comments_ID').val().trim() == "") {
+            swal('', Util.getTrans('_finalComments'), 'warning');
+            return false;
+        }
+
+        var InspectionDetailList = new Array();
+        $('#fromCreateAudit *').filter(':input').each(function (e, input) {
+            if (input.type == "checkbox") {
+                var ID = input.dataset.id;
+                var comments = $('#txtComment_' + ID).val().trim();
+                var isChecked = $('#chk_' + ID).prop('checked');
+                if (!isChecked || comments != "") {
+                    InspectionDetailList.push({
+                        AuditServiceID: Global.AuditServiceID,
+                        LookupAuditDetailID: ID,
+                        Comments: comments,
+                        IsChecked: !isChecked,
+                        updateID: $('#chk_' + ID).attr('data-updateid'),
+                    });
+                }
+            }
+        })
+        var FormSubmitModel = {
+            AuditDetailList: InspectionDetailList,
+            AuditServiceID: Global.AuditServiceID
+        };
+        var AuditService = {
+            Inspector_ID: lsUser.UserID,
+            ID: Global.AuditServiceID,
+            GPS_Cord: lat + "," + lng,
+            //NextVisit_Date: new Date(),
+            Remarks: $('#comments_ID').val(),
+            Auto_Remarks: '',
+            TimeSpent: Util.TimeSpent(ss.InpsectionTimeSpent),
+            ToEmp_ID: lsUser.UserID,
+            IsEditMode: isFormEidtMode,
+            RiskLevel_ID: RiskLevel,
+        };
+
+        console.log(InspectionDetailList);
+        FetchService('post', config.UpdateInspectionService, JSON.stringify(AuditService), true, function (r, xhr) {
+            console.log(r);
+            if (r.IsSuccess) {
+                FetchService("post", config.PostInspectionDetailsForm, JSON.stringify(FormSubmitModel), true, function (r, xhr) {
+                    if (r.IsSuccess) {
+                        //debugger;
+                        SendBacktoEservices(RiskLevel);
+                        //if (!SendBacktoEservices(RiskLevel)) {
+                        //    swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+                        //    return false;
+                        //}
+
+                        CloseModal('#model_AuditDetail');
+                        swal(Util.getTrans('_success'), Util.getTrans("_successDone"), 'success');
+                    } else {
+                        swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+                    }
+                })
+
+            } else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        });
+
+        return false;
+    }
+
+
+</script>
+
+
+<form id="fromCreateAudit" method="get" enctype="multipart/form-data">
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="card2">
+
+                <div id="TopicName_ID" class="TopicName_ID  "></div>
+                <div class="DocNo_ID ">
+                    <span data-tran="_docNumber"></span>
+                    <span id="DocNo_ID"></span>
+                    <div id="InspectionResult_Div" style="margin: 10px 40%;width: 20%;text-align: center;padding: 6px;color: white;"></div>
+                </div>
+                <div id="HistoryDataMarkeup"></div>
+                <br />
+                <div class="body" id="InspectionQuestion_div">
+                </div>
+                <div id="ImageControl"></div>
+                <div class="">
+                    <b><span data-tran="_comment"></span></b>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="material-icons">text_format</i>
+                        </span>
+                        <div class="form-line">
+                            <textarea type="text" class="form-control" name="comments_ID" id="comments_ID" rows="4" cols="100" required></textarea>
+                        </div>
+                    </div>
+                </div>
+                <center>
+                    <br />
+                    <br />
+                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                        <!--<div id="InspectionResult_Div" style="width: 20%;text-align: center;padding: 6px;color: white;">-->
+
+                    </div>
+                    <button id="btnSubmitInspection1" data-type="3" type="button" onclick="SubmitInspection(this); return false;"
+                            class="btn bg-green btn-md waves-effect" style="background-color: #4bbd3d !important;">
+                        <span data-tran="_aprove"></span>
+                    </button>
+                    <!--<button id="btnSubmitInspection2" data-type="2" type="button" onclick="SubmitInspection(this)"
+                            class="btn bg-orange btn-md waves-effect">
+                        <span data-tran="_mediumRisk"></span>
+                    </button>-->
+                    <button id="btnSubmitInspection3" data-type="1" type="button" onclick="SubmitInspection(this); return false;"
+                            class="btn bg-red btn-md waves-effect">
+                        <span data-tran="_reject"></span>
+                    </button>
+
+
+
+                    <!--<button id="btnSubmitInspection" type="button" onclick="submitInspection(this)"
+                            class="btn bg-green btn-block btn-lg waves-effect">
+                        <span data-tran="_submitInspection"></span>
+                    </button>-->
+            </div>
+            </center>
+        </div>
+    </div>
+    </div>
+</form>

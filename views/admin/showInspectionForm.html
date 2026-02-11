@@ -1,0 +1,56 @@
+﻿<form id="fromCreateAuditd">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <span data-tran=""> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5">
+              
+            </ul>
+        </div>
+        <div class="body">
+            <div class="demo-masked-input">
+                <div class="row clearfix">
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8">
+                        <div class="switch">
+                            <label>
+                                <span data-tran="_inspection"></span>
+                                <input type="checkbox" checked="" id="chk_isAudit" onchange="ChangeAuditOrInspection(this)">
+                                <span class="lever"></span>
+                                <span data-tran="_audit"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 ddDepartment">
+                        <b><span data-tran="_department"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ddDepartment" onchange="onchange_ddDepartment(this)" name="DeptID" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <b><span data-tran="_establishmentType"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">domain</i><span class="pl-red"> * </span>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select" id="ddEstablishmentType" name="EstablishmentType_ID" onchange="onchange_ddEstbType(this)"
+                                        style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 inspBtn">
+
+                    </div>
+                </div>
+            </div>
+
+            <br /><br /><br /><br /><br /><br />
+        </div>
+    </div>
+</form>

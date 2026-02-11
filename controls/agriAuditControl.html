@@ -1,0 +1,293 @@
+﻿
+<script>
+    //agri.Audit.Control
+    var totalBlackPoints = 0;
+    var totalViolationWeightage = 0.0;
+    var RequiredAudits = new Array();
+    var isFormEidtMode = false;
+
+    $(function () {
+        CreateAuditTemplate(Global.EstablishmentTypeID);
+
+        ss.InpsectionTimeSpent = new Date();
+        pleaseWait(false);
+    })
+    function GetAuditSubmittedData() {
+        if (parseInt(Global.AuditServiceID) == 0) {
+            return false;
+        }
+        var data = { AuditServiceID: Global.AuditServiceID }
+        debugger;
+        FetchService("post", config.GetAuditDetailsForm, JSON.stringify(data), true, function (r, xhr) {
+            if (r.IsSuccess) {
+                console.log(r.ResponseData);
+                var res = r.ResponseData[0];
+                Global.EstablishmentName = res.Establishment_NameAr;
+                $('#establishmentName').html(res.Establishment_NameAr);
+                if ((res.Total_Points != null && res.Total_Points != '') || res.Audit_AnimalDeptForm.length > 0) {
+                    $('#comments_ID').val(res.Remarks);
+                    $('#btnSubmitInspection').text(Util.getTrans('_updateInspection'));
+                }
+                if (res.Audit_AnimalDeptForm.length > 0) {
+                    isFormEidtMode = true;
+
+                    $.each(res.Audit_AnimalDeptForm, function (i, v) {
+                        $('#txtComment_' + v.LookupAuditDetailID).val(v.Comments);
+                        $('#chk_' + v.LookupAuditDetailID).attr('data-updateid', v.ID);
+                        if (v.IsChecked) {
+                            $('#chk_' + v.LookupAuditDetailID).attr('checked', true);
+                            $('#tr_' + v.LookupAuditDetailID).css("background-color", 'rgb(236, 234, 234)');
+
+                            totalBlackPoints -= parseInt($('#chk_' + v.LookupAuditDetailID).attr('data-blackpoints'));
+                            totalViolationWeightage -= parseFloat($('#chk_' + v.LookupAuditDetailID).attr('data-violationweightage'));
+                            RequiredAudits.push({ id: v.LookupAuditDetailID, days: $('#chk_' + v.LookupAuditDetailID).attr('data-days') });
+                        }
+                    });
+                }
+                debugger;
+                ss.ins_img = res.Audit_Attachment.length > 0 ? JSON.stringify(res.Audit_Attachment) : null;
+                GetImageControl();
+
+                UpdateTotalReult();
+            }
+        });
+        if (Global.isAuditFormDisable) {
+            $('#btnSubmitInspection').hide();
+            $('#comments_ID').prop('disabled', true);
+            $('#fromCreateAudit *').filter(':input').each(function (en, input) {
+                $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', true);
+            });
+        }
+    }
+    function UpdateTotalReult() {
+
+        $('#BlackPoints_ID').html(totalBlackPoints);
+        $('#TotalWeight_ID').html(Util.RoundNumber(totalViolationWeightage));
+    }
+
+    function CreateAuditTemplate(estabTypeID) {
+        var row = '';
+        var html = '<table class="table table-condensed">\
+                <thead>\
+                    <tr>\
+                        <td></td>\
+                        <td style="width:20%"><b><span data-tran="_violationOfLaw"></span></b></td>\
+                        <td><b><span data-tran="_blackpoints"></span></b></td>\
+                        <td><b><span data-tran="_weightage"></span></b></td>\
+                        <td><b><span data-tran="_repeatVisit"></span></b></td>\
+                        <td><b><span data-tran="_actionRequired"></span></b></td>\
+                        <td><b><span data-tran="_comment"></span></b></td>\
+                        <td><b><span data-tran="_comment"></span></b></td>\
+                    </tr>\
+                </thead>\
+                <tbody id="setTemplateTbody"></tbody>\
+            </table>';
+        $('#setTemplate').html(html);
+        var data = JSON.stringify({ "EstablishmentTypeID": estabTypeID });
+        FetchService("post", config.GetAuditsLookup, data, false, function (r, xhr) {
+
+            $('#TopicAudit').html(r.ResponseData[0].EstablishmentTypeNameAr);
+            if (r.IsSuccess) {
+                var _totalBlackPoints = 0;
+                $.each(r.ResponseData, function (i, v) {
+                    _totalBlackPoints += v.BlackPoints;
+                });
+
+                $.each(r.ResponseData, function (i, v) {
+                    //debugger;
+                    var wt = (v.BlackPoints / _totalBlackPoints) * 100;
+                    v.LegislationNo = v.LegislationNo == '' ? "v" : v.LegislationNo;
+
+                    var attrb = 'data-isdisableform=' + v.isDisableForm + '  data-id=' + v.ID + ' data-days=' + v.NoOfDays + '  data-violationweightage = ' + wt + ' data-blackpoints= ' + v.BlackPoints + ' data-legislationno=' + v.LegislationNo + ' data-updateid=0';
+                    row += '<tr id="tr_' + v.ID + '">'
+                    row += '<td><input type="checkbox" id="chk_' + v.ID + '"  class="chk-col-red"' + attrb + '>\
+                        <label  ' + attrb + ' onclick= "SelectCheckbox(this)" for="chk_' + v.ID + '"></label></td>';
+                    row += '<td>' + v.EvaluationAr + '</td>';
+                    row += '<td style="background-color:' + Util.getRiskLevelColor(v.RiskLevelID) + '">' + v.BlackPoints + '</td>';
+                    row += '<td>' + Util.RoundNumber(wt) + '%</td>';
+                    row += '<td>' + v.NoOfDaysName + '</td>';
+                    row += '<td style="font-size:10px">' + v.ActionTaken + '</td>';
+                    row += '<td style="font-size:10px">' + v.ViolationTarget + '</td>';
+                    row += '<td><textarea class="form-control" id="txtComment_' + v.ID + '" style="width: unset;" cols="20" rows="4"></textarea></td>';
+                    row += '</tr>';
+                    totalBlackPoints += parseInt(v.BlackPoints);
+                    totalViolationWeightage += parseFloat(wt);
+
+                    row = row.replace('null', '');
+                    row = row.replace('""', '');
+                })
+
+                $('#setTemplateTbody').html(row);
+            }
+            console.log("TotalBlackPoints = " + totalBlackPoints + " , v=" + totalViolationWeightage);
+            GetAuditSubmittedData();
+        });
+    }
+
+    function SelectCheckbox(e) {
+        debugger;
+        var isDisableForm = e.dataset.isdisableform;
+        if (isDisableForm == "true" && !e.control.disabled) {
+            totalBlackPoints = 0;
+            totalViolationWeightage = 0;
+            RequiredAudits = new Array();
+            $('#fromCreateAudit *').filter(':input').each(function (en, input) {
+                if (input.type == "checkbox") {
+                    totalBlackPoints += parseInt(input.dataset.blackpoints);
+                    totalViolationWeightage += parseFloat(input.dataset.violationweightage);
+                }
+            })
+            $('#fromCreateAudit *').filter(':input').each(function (en, input) {
+                if (input.type == "checkbox" && input.dataset.isdisableform == 'false') {
+                    if (!e.control.checked) {
+                        $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', true);
+                        $('#chk_' + input.dataset.id).prop('checked', false);
+
+                    } else {
+                        $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', false);
+                        $('#chk_' + input.dataset.id).prop('checked', false);
+                    }
+                }
+                UpdateTotalReult();
+            })
+        }
+        if (!e.control.disabled) {
+            var id = e.dataset.id;
+            var blackPoint = e.dataset.blackpoints;
+            var violationWeightage = e.dataset.violationweightage;
+            var days = e.dataset.days;
+            var checkbox = $('#chk_' + id).prop('checked');
+            if (!checkbox) {
+                $('#tr_' + id).css("background-color", 'rgb(236, 234, 234)');
+                totalBlackPoints -= parseInt(blackPoint);
+                totalViolationWeightage -= parseFloat(violationWeightage);
+                RequiredAudits.push({ id: id, days: days });
+
+            } else {
+                $('#tr_' + id).css("background-color", 'white');
+                totalBlackPoints += parseInt(blackPoint);
+                totalViolationWeightage += parseFloat(violationWeightage);
+                for (var i = 0; i < RequiredAudits.length; i++) {
+                    if (RequiredAudits[i].id == id) {
+                        RequiredAudits.splice(i, 1);
+                    }
+                }
+            }
+            UpdateTotalReult();
+            console.log(totalBlackPoints, totalViolationWeightage);
+        }
+    }
+
+    function SubmitInpsection() {
+        debugger;
+        if ($('#comments_ID').val().trim() == "") {
+            swal('', Util.getTrans('_requiredField'), 'warning');
+            return false;
+        }
+        var AuditDetailList = new Array();
+        var RiskLevel = new Array();
+        $('#fromCreateAudit *').filter(':input').each(function (e, input) {
+            if (input.type == "checkbox") {
+                var ID = input.dataset.id;
+                var comments = $('#txtComment_' + ID).val();
+                var isChecked = $('#chk_' + ID).prop('checked');
+                if (isChecked || comments != "") {
+                    AuditDetailList.push({
+                        AuditServiceID: Global.AuditServiceID,
+                        LookupAuditDetailID: ID,
+                        Comments: comments,
+                        IsChecked: isChecked,
+                        updateID: $('#chk_' + ID).attr('data-updateid'),
+                    });
+                }
+            }
+        });
+        var FormSubmitModel = {
+            AuditDetailList: AuditDetailList,
+            AuditServiceID: Global.AuditServiceID
+        };
+        var ra = RequiredAudits.length > 0 ? [... new Set(RequiredAudits.map(x => x.days))] : [365];
+
+        totalViolationWeightage = parseInt(totalViolationWeightage) > 100 ? 100 : parseInt(totalViolationWeightage);
+        var AuditService = {
+            Inspector_ID: lsUser.UserID,
+            ID: Global.AuditServiceID,
+            GPS_Cord: lat + "," + lng,
+            //NextVisit_Date: new Date(),
+            Rating: parseInt(totalViolationWeightage),
+            Remarks: $('#comments_ID').val(),
+            Auto_Remarks: Util.getTrans("_totalPoints") + ": " + totalBlackPoints,
+            TimeSpent: Util.TimeSpent(ss.InpsectionTimeSpent),
+            Total_Points: totalViolationWeightage,
+            ToEmp_ID: lsUser.UserID,
+            IsEditMode: isFormEidtMode,
+            RequiredAudits: ra,
+
+        };
+        FetchService('post', config.UpdateAuditsService, JSON.stringify(AuditService), true, function (r, xhr) {
+            console.log(r);
+            if (r.IsSuccess) {
+                FetchService("post", config.PostAuditDetailsForm, JSON.stringify(FormSubmitModel), true, function (r, xhr) {
+                    if (r.IsSuccess) {
+                        debugger;
+                        var msg = ''; var daysMsg = '';
+                        $.each(ra, function (i, v) {
+                            daysMsg += Util.AddDays(v) + ",";
+                        });
+                        daysMsg = daysMsg.substr(0, daysMsg.length - 1);
+                        msg = "Next visits are schedule for " + daysMsg + " ";
+                        //swal(Util.getTrans('_success'), Util.getTrans('_successDone'), 'success');
+                        // $('#model_AuditDetail').modal('hide');
+                        CloseModal('#model_AuditDetail');
+                        swal(Util.getTrans('_success'), msg, 'success');
+                    } else {
+                        swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+                    }
+                }, true);
+
+            } else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        }, true);
+
+    }
+</script>
+<form id="fromCreateAudit">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <span id="TopicAudit"> </span>
+            </h1>
+            <h3 style="text-align: center;margin-top:3px" id="establishmentName"> </h3>
+            <ul class="header-dropdown m-r--5">
+                <div>
+                    <span data-tran="_totalBlackPoints"></span>: <b id="BlackPoints_ID">0</b>
+                </div>
+                <div><span data-tran="_totalWeight"></span>: <b id="TotalWeight_ID">0</b>%</div>
+            </ul>
+            <div id="HistoryDataMarkeup"></div>
+        </div>
+        <div class="body">
+
+            <div id="setTemplate"></div>
+            <div id="ImageControl"></div>
+            <div class="">
+                <b><span data-tran="_comment"></span></b>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">text_format</i>
+                    </span>
+                    <div class="form-line">
+                        <textarea type="text" class="form-control" name="comments_ID" id="comments_ID" rows="4" cols="100" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <button id="btnSubmitInspection" type="button" onclick="SubmitInpsection(this); return false;"
+                        class="btn bg-green btn-block btn-lg waves-effect">
+                    <span data-tran="_submitInspection"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,23 @@
+﻿<script>
+    var Controls = [
+        {
+            name: "CrusherQurrayAudit", ID: 11 //quarry
+        }, {
+            name: "CementFactoryAudit", ID: 12 ///cement
+        }, {
+            name: "EnvAudit_Report", ID: 64 //cement
+        }, {
+            name: "EnvAudit_Report", ID: 63 //quarry
+        }
+        
+    ];
+
+    // $(function () {
+    var control = Util.findInJSONObject(Controls, { ID: Global.EstablishmentTypeID })[0].name;
+    getControl(control, 'LoadEnvAudits', function (script) {
+        $('#LoadEnvAudits').html(script);
+    });
+    //})
+
+</script>
+<div id="LoadEnvAudits"></div>

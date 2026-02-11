@@ -1,0 +1,385 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+    <title>MOCCAE Audit System</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <!-- Bootstrap Core Css -->
+    <link href="plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- Waves Effect Css -->
+    <link href="plugins/node-waves/waves.css" rel="stylesheet" />
+    <link href="plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!--  You can choose a theme from css/themes instead of get all themes -->
+    <link href="css/themes/all-themes.css" rel="stylesheet" />
+    <link href="css/themes/theme-green.min.css" rel="stylesheet" />
+    <link href="plugins/light-gallery/css/lightgallery.css" rel="stylesheet">
+    <!-- Bootstrap Material Datetime Picker Css -->
+    <link href="plugins/bootstrap-material-datetimepicker/css/bootstrap-material-datetimepicker.css" rel="stylesheet" />
+    <link href="plugins/chosen/chosen.css" rel="stylesheet" />
+    <!-- Sweetalert Css -->
+    <link href="plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <link href="css/select2/select2.css" rel="stylesheet" />
+    <link href="plugins/bootstrap-table/css/footable.bootstrap.min.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="css/style.css?v=1.9.3" rel="stylesheet" id="EnCSS">
+    <link href="css/arabic_css.css?v=1.9.3" rel="stylesheet" id="ArCSS">
+
+
+
+    <script src="plugins/jquery/jquery.min.js"></script>
+    <script src="js/Jquery.cookies.js"></script>
+
+    <script src="plugins/bootstrap/js/bootstrap.js"></script>
+    <!--<script src="~/plugins/bootstrap-select/js/bootstrap-select.js"></script>-->
+
+    <script src="plugins/jquery-slimscroll/jquery.slimscroll.js"></script>
+
+    <script src="plugins/node-waves/waves.js"></script>
+
+    <script src="plugins/autosize/autosize.js"></script>
+
+    <script src="plugins/momentjs/moment.js"></script>
+    <script src="plugins/bootstrap-material-datetimepicker/js/bootstrap-material-datetimepicker.js?v=1"></script>
+    <script src="plugins/chartjs/Chart.bundle.js"></script>
+    <script src="plugins/raphael/raphael.min.js"></script>
+    <script src="plugins/morrisjs/morris.js"></script>
+    <!-- Custom Js -->
+    <script src="js/admin.js"></script>
+    <!-- Demo Js -->
+    <script src="js/demo.js"></script>
+    <script src="plugins/chosen/chosen.jquery.js"></script>
+    <!-- SweetAlert Plugin Js -->
+    <script src="plugins/sweetalert/sweetalert-dev.js"></script>
+    <!--<script src="js/jquery.table2excel.js"></script>-->
+    <script src="js/pages/ui/modals.js"></script>
+    <script src="js/pages/ui/dialogs.js"></script>
+    <script src="js/pages/ui/notifications.js"></script>
+
+    <script src="plugins/bootstrap-notify/bootstrap-notify.js"></script>
+    <script src="plugins/light-gallery/js/lightgallery-all.js"></script>
+    <script src="js/select2.js"></script>
+    <script src="js/xlsx.full.min.js"></script>
+    <script src="js/pdfmake.min.js"></script>
+    <script src="js/canvas.min.js"></script>
+    <script src="plugins/bootstrap-table/js/footable.js?v=1"></script>
+    <script src="js/jquery.validate.min.js"></script>
+    <script src="js/jSignature.min.js"></script>
+    <script src="Setting.js?v=1.9.3"></script>
+    <script src="js/config.js?v=1.9.3"></script>
+
+
+</head>
+<!--mainSection-->
+<body class="theme-orange">
+
+    <div class="modal fade" id="model_showDeatil" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <a class="btn btn-link waves-effect" onclick="CloseModal('#model_showDeatil')"
+                   style="background-color: beige;">
+                    <span data-tran="_close"></span>
+                </a>
+                <div class="modal-body" id="ubody">
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+
+                </div>
+                <div style="padding:10px 18px">
+                    <button class="btn btn-danger btnUpdateGPS" style="display:none" data-id="" onclick="UpdateGPSEstablistment(this)"><span data-tran="_update"></span></button>
+                    <!--<button class="btn btn-success" data-dismiss="modal"><span data-tran="_ok"></span></button>-->
+                </div>
+            </div>
+            <div class="modal-footer">
+
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="model_AuditDetail" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document" style="width:calc(100% - 25px) !important;">
+            <div class="modal-content">
+                <a class="btn btn-link waves-effect" onclick="CloseModal('#model_AuditDetail')" style="background-color: beige;">
+                    <span data-tran="_close"></span>
+                </a>
+                <div class="modal-body" id="ubody_AuditDetail">
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="mdModalNotification" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document" style="width:72% !important">
+            <div class="modal-content">
+                <!--<div class="modal-header">
+                    <h4 class="modal-title" id="defaultModalLabel"> NOTIFICATIONS</h4>
+                </div>-->
+                <div class="modal-body" id="body_notificationList"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link waves-effect" data-dismiss="modal" onclick="CloseModal('#mdModalNotification')">
+                        <span data-tran="_cancel"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper">
+        <div class="loader">
+            <div class="preloader">
+                <div class="spinner-layer pl-green">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+            <p><span data-tran="_pleaseWait"></span></p>
+            <div>
+                <a href="javascript:void(0)" onclick="disableLoading()">
+                    <span data-tran="_cancel"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- #END# Page Loader -->
+    <!-- Overlay For Sidebars -->
+    <div class="overlay"></div>
+    <!-- #END# Overlay For Sidebars -->
+    <!-- Top Bar -->
+
+    <nav class="navbar">
+        <div class="container-fluid">
+
+            <div class="navbar-header cssheader">
+                <!--<a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#navbar-collapse" aria-expanded="false"></a>-->
+                <a href="javascript:void(0);" class="bars"></a>
+                <!--<a class="navbar-brand" href="#" style="position: relative;top: -1vw;">
+
+                    <span style=""> @InspectionSystem.LocalResource.Resource.ProjectName</span>
+                </a>-->
+            </div>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="nav navbar-nav cssheader2">
+                    <!-- Notifications -->
+                    <!--<li class="dropdown">
+                        <a href="javascript:void(0);" class="dropdown-toggle"
+                           data-toggle="dropdown"
+                           role="button">
+                            <i class="material-icons" style="">
+                                notifications
+                            </i>
+                            @{
+                            var c = InspectionSystem.Classes.gnFunction.MsgCount;
+                            }
+                            <span class="label-count">@c </span>
+                        </a>
+                        <ul class="dropdown-menu" id="body_Notification"></ul>
+                    </li>-->
+                    <!-- #END# Tasks -->
+                    <li class="pull-right">
+                        <a href="javascript:void(0);" class="js-right-sidebar" data-close="true">
+                            <i class="material-icons">
+                                <!--@*more_vert*@-->
+                            </i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- #Top Bar -->
+    <section>
+        <!-- Left Sidebar -->
+
+        <aside id="leftsidebar" class="sidebar">
+            <!-- User Info -->
+            <div class="user-info" style="">
+                <div class="image">
+                    <!--@*<img src="~/images/user.png" width="48" height="48" alt="User" />*@-->
+                </div>
+
+                <div class="info-container">
+
+                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span data-tran="_loginUserName"></span>
+                    </div>
+                    <div class="email"><span data-tran="_loginEmail"></span></div>
+
+                    <div class="btn-group user-helper-dropdown">
+                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            keyboard_arrow_down
+                        </i>
+                        <ul class="dropdown-menu pull-right">
+                            <li class="selectLang">
+                                <a href="javascript:void(0)" onclick="ChangeLanguge()" style="">
+                                    <span data-tran="_languageTextWithIcon"></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#views/admin/profile" style="">
+                                    <i class="material-icons">person</i>
+                                    <span data-tran="_profile"></span>
+                                </a>
+                            </li>
+                            <li role="separator" class="divider"></li>
+                            <li>
+                                <a href="javascript:void(0)" onclick="SystemLogout()">
+                                    <i class="material-icons">input</i>
+                                    <span data-tran="_signOut"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- User Info -->
+            <!-- Menu -->
+
+            <div class="menu">
+                <ul class="list" style="list-style: none;">
+                    <li class="header"><span data-tran="_main_navigation"></span></li>
+                    <li>
+                        <a href="#views/main" class=" ">
+                            <i class="material-icons">home</i>
+                            <span data-tran="_home"></span>
+                        </a>
+                    </li>
+                    <li class="createAudit clearls">
+                        <a href="#views/createAudit" class=" ">
+                            <i class="material-icons">add_to_photos</i>
+                            <span data-tran="_createNewAudit"></span>
+                        </a>
+                    </li>
+                    <li class="createEstablishment clearls">
+                        <a href="#views/createEstablishment" class=" ">
+                            <i class="material-icons">add</i>
+                            <span data-tran="_createNewEstablishment"></span>
+                        </a>
+                    </li>
+
+                    <li class="mailbox clearls">
+                        <a href="#views/mailbox" class=" ">
+                            <i class="material-icons">inbox</i>
+                            <span data-tran="_inboxText"></span>
+                            <span class="mailboxNumberClass number  badge "></span>
+                        </a>
+                    </li>
+                    <li class="groupInspection clearls">
+                        <a href="#views/groupInspection" class="  ">
+                            <i class="material-icons">group</i>
+                            <span data-tran="_groupInspection"></span>
+                        </a>
+                    </li>
+                    <li class="report clearls">
+                        <a href="#views/report" class=" ">
+                            <i class="material-icons">chrome_reader_mode</i>
+                            <span data-tran="_reports"></span>
+                        </a>
+                    </li>
+                    <li class="incidentmail clearls">
+                        <a href="#views/incidentmail" class=" ">
+                            <i class="material-icons">report</i>
+                            <span data-tran="_incidents"></span>
+                            <span id="" class="incidentNumberClass number  badge"> </span>
+                        </a>
+                    </li>
+                    <li class="createIncident clearls">
+                        <a href="#views/createIncident" class=" ">
+                            <i class="material-icons">add</i>
+                            <span data-tran="_createIncident"></span>
+                        </a>
+                    </li>
+                    <li class="reportJSR clearls">
+                        <a href="#views/JudicialSeizure/reportJSR" class=" ">
+                            <i class="material-icons">domain</i>
+                            <span data-tran="_createJSR"></span>
+                        </a>
+                    </li>
+                    <!--<li class="notification clearls">
+                        <a href="#views/notification" class="">
+                            <i class="material-icons">notifications_active</i>
+                            <span data-tran="_notification"></span>
+                            <span class="notificationNumber number  badge"></span>
+                        </a>
+
+                    </li>-->
+                    <!--<ul class="ml-menu">
+                            <li>
+                                <a href="#view/mailbox" class="clearls">
+                                    <i class="material-icons">inbox</i>
+                                    <span data-tran="_inboxText"></span> <span class="badge inboxCount badge-cirle">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="~/__admin/sentitem" class="clearls">
+                                    <i class="material-icons">send</i>
+                                    <span data-tran="_sentItem"></span><span class="badge sentCount badge-cirle">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="~/__admin/pendingitem" class="clearls">
+                                    <i class="material-icons">update</i>
+                                    <span data-tran="_pendingItem"></span><span class="badge pendingCount badge-cirle">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="~/__admin/completeditem" class="clearls">
+                                    <i class="material-icons">done_all</i>
+                                    <span data-tran="_completedItem"></span><span class="badge completedCount badge-cirle">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>-->
+
+                </ul>
+            </div>
+            <!-- #Menu -->
+            <!-- Footer -->
+            <!--@*<div class="legal">
+                <div class="copyright">
+                    &copy; @DateTime.Now.Year <a href="javascript:void(0);">MoCCaE - Happiness Index</a>.
+                </div>
+            </div>*@-->
+            <!-- #Footer -->
+        </aside>
+        <!-- #END# Left Sidebar -->
+    </section>
+    <section class="content">
+        <div class="container-fluid">
+            <div id="mainSection"></div>
+            <br /><br /><br />
+
+        </div>
+    </section>
+
+
+    <script src="lib/translation.js?v=1.9.3"></script>
+    <script src="index.js?v=1.9.3"></script>
+
+    <script src="js/pdf_report.js"></script>
+    <script src="js/Inspection_report.js"></script>
+    <script src="js/uaebounderies.js"></script>
+
+
+    <script src="https://maps.google.ae/maps/api/js?key=AIzaSyD2TKA_xdUldeY7yOZxXgRPBeCNhdr1uXM&libraries=places,marker&callback=LoadMap"></script>
+</body>
+</html>

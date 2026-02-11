@@ -1,0 +1,168 @@
+﻿<script>
+    var fileUploadArray = new Array();
+
+    $(function () {
+        var param = Util.getParameter('id');
+        console.log(param);
+        //hide fileupload for customer service.
+        if (lsUser.RoleID == EmployeeRole.CustomerService) {
+            $('#fileUpload_div').hide();
+        }
+
+        Util.GetSavedImages();
+        //$(document).on('change', '#FileUpload', function (event) {
+        //    //$("#FileUpload").change(function (event) {
+        //    //Util.onUploadImage(event);
+        //    console.log("Image changed");
+        //    event.preventDefault();
+        //    event.stopPropagation();
+        //    UploadImage();
+        //});
+
+    })
+    function UploadImage() {
+        debugger;
+        var url = config.PostInspectionImage + Global.AuditServiceID + "/" + Global.IncidentID;
+        var fileSelected = $('#FileUpload').val();
+        if (fileSelected.length <= 0) {
+            swal(Util.getTrans('_pleaseSelectFile'), Util.getTrans('_pleaseSelectFile'), 'warning');
+            return false;
+        }
+        else if (!SupportedFileExtension(fileSelected.split('.').pop())) {
+            swal(Util.getTrans('_error'), Util.getTrans('_fileNotSupported'), 'warning');
+            return false;
+        }
+        else {
+            var form_data = new FormData();
+            var ins = document.getElementById('FileUpload').files.length;
+            for (var x = 0; x < ins; x++) {
+                form_data.append("file", document.getElementById('FileUpload').files[x]);
+            }
+
+            UploadFiles(url, form_data, function (data, st, xhr) {
+                if (data.IsSuccess) {
+                    var res = data.ResponseData;
+                    var imgStore = JSON.parse(ss.getItem('ins_img')) || new Array();
+                    res.forEach(function (v) {
+                        imgStore.push({
+                            ID: v.ID,
+                            AuditServiceID: v.AuditServiceID,
+                            IncidnetID: v.IncidentID,
+                            EmployeeID: lsUser.UserID,
+                            Employee_Name: lsUser.FullName,
+                            CreationDate: v.DateCreated,
+                            FilePath: v.FileName
+                        });
+                    });
+
+                    ss.ins_img = JSON.stringify(imgStore);
+                    Util.GetSavedImages();
+                    document.getElementById('FileUpload').value = '';
+                    console.log(res);
+                    Util.Notification(Util.getTrans("_uploadSuccessful"), 'success');
+                    // swal(Util.getTrans('_uploadSuccessful'), Util.getTrans("_uploadSuccessful"), 'success');
+                }
+                else {
+                    document.getElementById('FileUpload').value = '';
+                    swal(Util.getTrans('_error'), "Server error ,Please try again", 'error');
+                }
+
+                //if (xhr.status == 200) {
+                //    swal(Util.getTrans('_uploadSuccessful'), Util.getTrans("_uploadSuccessful"), 'success');
+                //}
+                //else {
+                //    swal(Util.getTrans('_error'), Util.getTrans('_somthingWrong'), 'error');
+                //}
+                pleaseWait(false);
+            },
+                function (xhr, textStatus, errorThrown) {
+                    document.getElementById('FileUpload').value = '';
+                    if (xhr.status == 415) { // file type not supported.
+                        swal(Util.getTrans('_error'), Util.getTrans('_fileNotSupported'), 'warning');
+                    }
+                    else if (xhr.status == 406) { //file exceed 5 MB
+
+                        swal(Util.getTrans('_error'), Util.getTrans('_fileSizeExceed'), 'warning');
+                    }
+                    else if (xhr.status == 500) {
+                        swal(Util.getTrans('_error'), "Error, Please try again", 'error');
+                    }
+                    //else {
+                    //    swal(Util.getTrans('_error'), "Server error", 'error');
+                    //}
+                    console.log( JSON.stringify(xhr) + textStatus + ': ' + errorThrown);
+                    pleaseWait(false);
+                }
+            );
+            return true;
+        }
+        return true;
+    }
+    function SupportedFileExtension(ext) {
+        ext = ext.toLocaleLowerCase();
+        var SupportedExtensions = ['png', 'jpg', 'jpeg', 'png', 'bmp', 'pdf', 'docx', 'xlsx'];
+        if (SupportedExtensions.indexOf(ext) > -1) {
+            return true;
+        }
+        return false;
+    }
+
+    function FileArrow(e) {
+        if (e.innerHTML == "keyboard_arrow_down") {
+            e.innerHTML = 'keyboard_arrow_left';
+        }
+        else {
+            e.innerHTML = 'keyboard_arrow_down';
+        }
+    }
+
+</script>
+
+
+<div id="img_div" class="">
+    <div class="">
+        <div class="imgdiv_header">
+            <span style="position: absolute;right: 12px; top: 5px;cursor:pointer" data-toggle="collapse" data-target="#fileTableBody">
+                <i class="material-icons " onclick="FileArrow(this)">keyboard_arrow_down</i>
+            </span>
+            <b><span data-tran="_attachment"></span></b>
+        </div>
+        <div class="body collapse in fileTableBody" id="fileTableBody">
+            <div class="row clearfix">
+                <div id="aniimated-thumbnials" class="" style="padding: 0px 10px;">
+                </div>
+            </div>
+            <!--<hr />-->
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div id="fileUpload_div">
+                    <span data-tran="_extensionAllowed" style="color:darkred;display: block;"></span>
+                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding:10px;">
+                        <div class="upload-btn-wrapper">
+                            <button class="btn bg-green  waves-float waves-light">
+                                <span data-tran="_uploadFile"> </span>
+                            </button>
+                            <input type="file" name="file[]" id="FileUpload" accept="image/*;capture=camera" class="" multiple onchange="UploadImage()">
+                        </div>
+                    </div>
+                    <div class="col-lg-6  col-md-6 col-sm-6 col-xs-12">
+                        <button class="btn bg-green  waves-float waves-light" id="btnUploadFile" name="btnUploadFile" style="display:none">
+                            <!--<span data-tran="_attachment"></span>-->
+                            <i class="material-icons">publish</i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<br /><br /><br />
+<div class="row" id="table_div">
+
+</div>
+<hr />
+
+
+
+

@@ -1,0 +1,481 @@
+﻿
+<form id="fromCreateJSR">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <i class="material-icons">report</i> <span data-tran="_createJSR"> </span>
+            </h1>
+
+        </div>
+        <div class="body">
+            <div class="m-b-15">
+                <span id="_JSR_Text1" data-tran="_JSR_Text1"></span>
+            </div>
+            <div class="demo-masked-input">
+
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 ddDepartment">
+                        <b><span data-tran="_department"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ddDepartment" name="DeptID" onchange="onchange_ddDepartment(this)" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12  ">
+                        <b><span data-tran="_EstablishmentName"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="EstablishmentName" id="EstablishmentName" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12  ">
+                        <b><span data-tran="_IndustrialLicenseNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="IndustrialLicenseNo" id="IndustrialLicenseNo" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12  forAgrActivity">
+                        <b><span data-tran="_AgriculturalActivityLicenseNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="AgriculturalActivityLicenseNo" id="AgriculturalActivityLicenseNo" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 forAgrActivity">
+                        <b><span data-tran="_AgriculturalEngProfessionCertificateNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red">*</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="AgriculturalEngProfessionCertificateNo" id="AgriculturalEngProfessionCertificateNo" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 forVetActivity">
+                        <b><span data-tran="_VeterinaryMedicineProfessionLicenseNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="VeterinaryMedicineProfessionLicenseNo" id="VeterinaryMedicineProfessionLicenseNo" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   forVetActivity">
+                        <b><span data-tran="_VeterinaryActivityLicenseNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="VeterinaryActivityLicenseNo" id="VeterinaryActivityLicenseNo" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                        <b><span data-tran="_EstablishmentOwnerName"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="EstablishmentOwnerName" id="EstablishmentOwnerName" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                        <b><span data-tran="_emirate"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select" id="ddEmirate" name="EmirateId"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                        <b><span data-tran="_area"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="Area" id="Area" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="AddInChargePerson">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  m-b-15 header-Topic-jsr">
+                            <span class="font-bold" data-tran="_JSR_Text2"></span>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_Name"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="Supervisor_Name" id="Supervisor_Name" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                            <b><span data-tran="_job"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="Supervisor_JobTitle" id="Supervisor_JobTitle" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12">
+                            <b><span data-tran="_Address"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="Supervisor_Address" id="Supervisor_Address" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_ContactNo"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="Supervisor_ContactNo" id="Supervisor_ContactNo" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_Signature"></span> : </b>
+                            <a href="javascript:void(0)" id="clear"><span data-tran="_clear"></span></a>
+                            <div id="Supervisor_jsignature" class="signature-box"></div>
+                            <!--<img id="signImage" src=""   />-->
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 m-t-30  ">
+                            <button type="button" onclick="return Supervisor.AddNewSupervisor()" class="btn bg-green waves-effect"><span data-tran="_add"></span></button>
+                        </div>
+                        <div class="body">
+                            <div class="list-group SupervisorHistory">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="AddVetViolation">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  m-b-15 header-Topic-jsr ">
+                            <span class="font-bold" data-tran="_JSR_Text3"></span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_type"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="VetViolation_Type" id="VetViolation_Type" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_Number"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="number" class="form-control" name="VetViolation_Number" id="VetViolation_Number" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 ">
+                            <b><span data-tran="_Comments_ElectronicChipNumber"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <textarea type="text" class="form-control" name="VetViolation_Notes" id="VetViolation_Notes" rows="1" cols="100" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12   ">
+                            <button type="button" onclick="return VetViolation.AddNewViolation()" class="btn bg-green waves-effect"><span data-tran="_add"></span></button>
+                        </div>
+                        <div class="body">
+
+                            <div class="list-group VetViolationHistory">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12   ">
+                            <span data-tran="_JSR_Text4"></span>
+                        </div>
+                    </div>
+
+                    <div id="AddAgrViolation">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  m-b-15 header-Topic-jsr ">
+                            <span class="font-bold" data-tran="_JSR_Text3"></span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_TradeName"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="AgrViolation_TradeName" id="AgrViolation_TradeName" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_ActiveMaterial"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="AgrViolation_ActiveIngredient" id="AgrViolation_ActiveIngredient" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_PackageType"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="AgrViolation_PackageType" id="AgrViolation_PackageType" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_Number"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="number" class="form-control" name="AgrViolation_Number" id="AgrViolation_Number" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_Weight"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="number" class="form-control" name="AgrViolation_Weight" id="AgrViolation_Weight" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_BatchNumber"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="AgrViolation_BatchNumber" id="AgrViolation_BatchNumber" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-4 col-xs-12 ">
+                            <b><span data-tran="_ExpiryDate"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control datepicker" name="AgrViolation_ExpiryDate" id="AgrViolation_ExpiryDate" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_ViolationType"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="AgrViolation_Type" id="AgrViolation_Type" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12   ">
+                            <button type="button" onclick="return AgrViolation.AddNewViolation()" class="btn bg-green waves-effect"><span data-tran="_add"></span></button>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 m-b-5  ">
+                            <strong> <span id="vet_agr_material_id"></span></strong>
+                        </div>
+                        <div class="body">
+                            <div class="list-group AgrViolationHistory">
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12   ">
+                            <span data-tran="_JSR_Text5"></span>
+                        </div>
+                    </div>
+
+
+
+                    <div id="AddStatementOfViolation">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  m-b-15 header-Topic-jsr ">
+                            <span class="font-bold" data-tran="_StatementOfViolation"></span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                            <b><span data-tran="_JSR_Text6"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="InChargePersonName" id="InChargePersonName" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6   ">
+                            <b><span data-tran="InCapacityOf"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="InChargePersonCapacity" id="InChargePersonCapacity" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6   ">
+                            <b><span data-tran="InContactOf"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="InChargePersonContactNo" id="InChargePersonContactNo" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-5 col-md-5 col-sm-8 col-xs-12   ">
+                            <b><span data-tran="_JSR_Text7"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <button id="start-record-btn" title="" type="button"><span data-tran="_RecordVoice"></span></button>
+                                    <textarea type="text" class="form-control" name="ViolationStatement" id="ViolationStatement" rows="1" cols="100" required></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  m-b-15   ">
+                            <span class="font-bold" data-tran="_JSR_Text8"></span>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12   ">
+                            <b><span data-tran="_JSR_Text9"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="FederalLaw_LawNo" id="FederalLaw_LawNo" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12   ">
+                            <b><span data-tran="_FederalLawYear"></span></b>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="pl-red"> *</span>
+                                </span>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="FederalLaw_Year" id="FederalLaw_Year" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12   ">
+                            <button type="button" onclick="return FederalLaw.AddNew()" class="btn bg-green waves-effect"><span data-tran="_add"></span></button>
+                        </div>
+                        <div class="body">
+                            <div class="list-group FederalLawHistory">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="AddAttachments">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12  m-b-15 header-Topic-jsr ">
+                            <span class="font-bold" data-tran="_attachment"></span>
+                        </div>
+                        <div class="body">
+                            <div class="list-group AttachmentHistory">
+                            </div>
+                            <button type="button" id="addMoreBtn" class="m-b-25" onclick="Attachments.MakeOtherAttachment_Btn()"><span data-tran="_addMore"></span></button>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <b><span data-tran="_DefendantSignature"></span> : </b>
+                        <a href="javascript:void(0)" id="clear2"><span data-tran="_clear"></span></a>
+                        <div id="Defendant_jsignature" class="signature-box"></div>                         
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <b><span data-tran="_PoliceOfficerSignature"></span> : </b>
+                        <a href="javascript:void(0)" id="clear3"><span data-tran="_clear"></span></a>
+                        <div id="PoliceOfficer_jsignature" class="signature-box"></div>
+                    </div>
+
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
+                        <b><span data-tran="_comment"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                            </span>
+                            <div class="form-line">
+                                <textarea type="text" class="form-control" name="Comments" id="Comments" rows="4" cols="100" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12  m-t-15 ">
+                        <button type="button" onclick="return SaveForm()" class="btn bg-green waves-effect"><span data-tran="_Submit"></span></button>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

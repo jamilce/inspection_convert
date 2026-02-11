@@ -1,0 +1,184 @@
+﻿<form id="frmNewEst">
+    <div class="card animated fadeIn">
+        <div class="header">
+            <h1>
+                <span data-tran="_createNewEstablishment"></span>
+            </h1>
+            <ul class="header-dropdown m-r--5">
+                <button style="display:none" type="button" onclick="CancelUpdate(this)" class="btnCancelUpdate btn bg-red btn-circle-lg waves-effect waves-circle waves-float">
+                    <i class="material-icons">close</i>
+                </button>
+                <button type="button" onclick="AddNewEstablishment(this)" class="btn bg-brown btn-circle-lg waves-effect waves-circle waves-float">
+                    <i class="material-icons btnAdd">add</i>
+                </button>
+            </ul>
+        </div>
+        <div class="body">
+            <div class="demo-masked-input">
+                <div class="row clearfix">
+
+                    <div class="col-md-3 col-sm-6 ddDepartment">
+                        <b><span data-tran="_department"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select" id="ddDepartment" onchange="onchange_ddDepartment(this)"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_establishmentType"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">domain</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select" id="ddEstablishmentType" name="EstablishmentTypeID"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_emirate"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select" id="ddEmirate" name="EmirateId"></select>
+                            </div>
+                        </div>
+                    </div><div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_licenseNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">text_format</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" name="TradeLicenseNumber" id="TradeLicenseNumber" class="form-control  " placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_area"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">gps_not_fixed</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" name="Area" id="Area" class="form-control  " placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_NameAr"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">text_format</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="NameAr" id="NameAr" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_NameEn"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">text_format</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="NameEn" id="NameEn" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_latitude"></span></b> |
+                        <span>
+                            <a href="javascript:void(0)" onclick="ShowMapPopUp()">
+                                <span data-tran="_chooseLocation"> </span>
+                            </a>
+                        </span>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">room</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="Lat_X" id="Lat_X" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_longitude"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">room</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="Lng_Y" id="Lng_Y" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_mobileNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">phone</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" name="Mobile" id="Mobile" class="form-control" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 col-sm-6">
+                        <b><span data-tran="_email"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">email</i>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" name="Email" id="Email" class="form-control email" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="col-md-12 col-lg-12 col-xs-12 col-sm-12">
+                        <div style="border-top: 1.5px solid #b37f14; padding-bottom: 25px;"></div>
+                        <div class="col-md-5 col-sm-5">
+                            <b><span data-tran="_NameAr"></span></b> / <b><span data-tran="_NameEn"></span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="search" name="Search_CompanyName" id="Search_CompanyName" class="form-control"
+                                           placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-5">
+                            <b><span data-tran="_licenseNo"></span></b>
+                            <div class="input-group">
+                                <div class="form-line">
+                                    <input type="search" name="Search_LicenseNo" id="Search_LicenseNo" class="form-control email" placeholder="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-2" style=" margin-top: 10px;">
+                            <button class="btn btn-success" type="button" onclick="SaearchEstablishment_Local(this)"> <span data-tran="_search"></span></button>
+                            <button class="btn btn-danger" type="button" onclick="ClearEstablishment_Local(this)"> <span data-tran="_clear"></span></button>
+                        </div>
+
+                        <table class="table table-responsive" data-page-size="15"></table>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</form>

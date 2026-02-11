@@ -1,0 +1,101 @@
+﻿<form id="fromCreateAudit_incidentMail">
+    <div class="card">
+        <!--<div class="header">
+            <h1>
+                <span data-tran=""> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5"></ul>
+        </div>-->
+        <div class="body">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" id="inboxOnClick">
+                    <a href="#_inboxText" data-toggle="tab" aria-expanded="false">
+                        <i class="material-icons">inbox</i> <span data-tran="_inboxText"> </span> <span class="totalItem_inbox_incident"></span>
+                    </a>
+                </li>
+                <li role="presentation" class="" id="sentOnClick">
+                    <a href="#_sentItem" data-toggle="tab" aria-expanded="false">
+                        <i class="material-icons">send</i> <span data-tran="_sentItem"> </span> <span class="totalItem_sent_incident"></span>
+                    </a>
+                </li>
+
+                <a href="#views/createIncident" class="btnAddIncident btn bg-green waves-effect" style="float:left;display:none" >
+                    <i class="material-icons">add</i>
+                    <span data-tran="_createIncident"></span>
+                </a>
+              
+                
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active in fade" id="_inboxText">
+                    <div class="row clearfix">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+                                <!--<div class="header">
+                                    <h4>
+                                        <span data-tran="_inboxText"> </span> <span class="totalItem_inbox"></span>
+                                    </h4>
+                                </div>-->
+                                <div class="body">
+                                    <div class="list-group inbox_incident">
+                                        <center>
+                                            <div class="preloader pl-size-sm">
+                                                <div class="spinner-layer pl-brown">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="pagination">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="divInsForm_inbox_incident">
+                        </div>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="_sentItem">
+                    <div class="row clearfix">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+                                <!--<div class="header">
+                                    <h4>
+                                        <span data-tran="_sentItem"> </span> <span class="totalItem_sent"></span>
+                                    </h4>
+                                </div>-->
+                                <div class="body">
+                                    <div class="list-group sent_incident">
+                                        <center>
+                                            <div class="preloader pl-size-sm">
+                                                <div class="spinner-layer pl-brown">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="pagination">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="divInsForm_sent_incident">
+                        </div>
+                    </div>
+                </div>
+               
+            </div>
+
+        </div>
+    </div>
+</form>

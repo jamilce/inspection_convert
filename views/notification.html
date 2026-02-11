@@ -1,0 +1,50 @@
+﻿<form id="fromCreateAudit">
+    <div class="card">
+
+        <div class="body">
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active" id="inboxOnClick">
+                    <a href="#_notificationText" data-toggle="tab" aria-expanded="false">
+                        <i class="material-icons">notifications_active</i> <span data-tran="_notification"> </span> <span class="totalItem_notification"></span>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane active in fade" id="_notificationText">
+                    <div class="row clearfix">
+                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                            <div class="card">
+
+                                <div class="body">
+
+                                    <div id="markread" style="display:none">
+                                        <a href="javascript:void(0)" onclick="MarkAsRead()"><span data-tran="_markAsRead"></span></a>
+                                    </div>
+                                    <div class="list-group notification">
+
+                                        <center>
+                                            <div class="preloader pl-size-sm">
+                                                <div class="spinner-layer pl-brown">
+                                                    <div class="circle-clipper left">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                    <div class="circle-clipper right">
+                                                        <div class="circle"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </center>
+                                    </div>
+                                    <div class="pagination">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12" id="divInsForm_notification">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

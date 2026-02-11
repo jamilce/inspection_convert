@@ -1,0 +1,166 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Inpsection System</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+    <!-- Bootstrap Core Css -->
+    <link href="../plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!-- Waves Effect Css -->
+    <link href="../plugins/node-waves/waves.css" rel="stylesheet" />
+    <!-- Animation Css -->
+    <link href="../plugins/animate-css/animate.css" rel="stylesheet" />
+    <!-- Custom Css -->
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../plugins/sweetalert/sweetalert.css" rel="stylesheet" />
+    <script src="../plugins/jquery/jquery.min.js" type="text/javascript" la></script>
+    <!-- Validation Plugin Js -->
+    <!-- Bootstrap Core Js -->
+    <script src="../plugins/bootstrap/js/bootstrap.js"></script>
+    <!-- Bootstrap Colorpicker Js -->
+    <script src="../Setting.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../plugins/sweetalert/sweetalert.min.js"></script>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6LcOFLoqAAAAAKuvWDbmob7FnFg7n4OtZA91HRU5&onload=onloadCallback"></script>
+</head>
+<!--bg-moccae-->
+<body class="login-page ">
+    <div class=" ">
+        <script>
+            $(document).ready(function () {
+                if (ls.SmartAudit != null) {
+                    window.location.href = "../index.html";
+                }
+                //  $("#login").click(function () {
+                $('#loginform').on('submit', function (e) {
+                    e.preventDefault();
+                    $("#message").html("Logging in...");
+                    var data = { username: $("#userid").val(), password: $("#password").val(), gRecaptchaResponse: $("#g-recaptcha-response").val() };
+                    $.ajax({
+                        url: config.getToken,
+                        type: "POST",
+                        data: JSON.stringify(data),
+                        dataType: "json",
+                        contentType: "application/json",
+                        success: function (status) {
+                            $("#message").html('يرجى الانتظار');
+                            console.log(status.Message);
+                            if (status.IsSuccess) {
+                                debugger;
+                                var res = status.ResponseData;
+                                res.inslang = ls.SmartAudit == null ? 'ar' : JSON.parse(ls.SmartAudit).lang;
+                                ls.SmartAudit = JSON.stringify(res);
+                                 
+                                if (localStorage.redirectURL != null && localStorage.redirectURL != "") {
+                                    var ret = localStorage.redirectURL;
+                                    localStorage.redirectURL = "";
+                                    window.location.href = ret;
+                                } else {
+                                    window.location.href = "../index.html";
+                                }
+                                swal({
+                                    title: "SUCCESS!",
+                                    text: " , يرجى الانتظار...",
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                });
+
+                            } else {
+                                swal("خطأ", status.Message, "error");
+                                onloadCallback();
+                            }
+                        },
+                        error: function () {
+                            swal("خطأ", "حدث خطأ أثناء مصادقة بيانات اعتماد المستخدم", "error");
+                            $("#message").html("حدث خطأ أثناء مصادقة بيانات اعتماد المستخدم");
+                        }
+                    });
+                });
+            });
+            function onloadCallback() {
+                grecaptcha.ready(function () {
+                    grecaptcha.execute('6LcOFLoqAAAAAKuvWDbmob7FnFg7n4OtZA91HRU5', { action: 'login' }).then(function (token) {
+                        // Add the token to the hidden input
+                        document.getElementById('g-recaptcha-response').value = token;
+                    });
+                });
+            }
+        </script>
+
+        <div>
+
+            <form id="loginform">
+                <div class="login-box">
+                    <div class="logo animated fadeInDown">
+                        <a href="javascript:void(0);" style="color: #bf8d42;font-size: 35px;">
+                            نظام الامتثال البيئي
+                            <div style="font-size: 20px;"> Smart Inspection System</div>
+                        </a>
+                    </div>
+                    <div class="card animated flipInX" style="background: rgba(255, 255, 255, 0.95);box-shadow: 0 4px 10px rgb(23, 75, 52);">
+                        <div class="body">
+                            <img width="100%" src="../images/logo.png" />
+                            <hr />
+                            <span id="message"></span>
+                            <input type="hidden" id="g-recaptcha-response" name="gRecaptchaResponse" />
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">mail</i>
+                                </span>
+                                <div class="form-line">
+                                    <input id="userid" type="text" class="form-control" name="username" placeholder="Username" autocomplete="username" required autofocus>
+                                </div>
+                                <span class="input-group-addon">@moccae.gov.ae</span>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="material-icons">lock</i>
+                                </span>
+                                <div class="form-line">
+                                    <input id="password" type="password" class="form-control" name="password" placeholder="Password" required autocomplete="current-password">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-6 p-t-5">
+                                    <input type="checkbox" name="rememberme"
+                                           style="position: unset !important;" id="rememberme" class="filled-in chk-col-brown">
+                                    <label for="rememberme">تذكرنى</label>
+                                </div>
+                                <div class="col-xs-6">
+                                    <button id="login" class="btn btn-block bg-green waves-effect"
+                                            style="padding: 8px 4px !important; width: 158px;"
+                                            type="submit">
+                                        تسجيل الدخول
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row m-t-15 m-b--20">
+                                <!--<div class="col-xs-2">
+
+        </div>
+        <div class="col-xs-10 align-right">
+            <a style="font-size: 12px;" href="#">هل نسيت كلمة المرور؟ الاتصال قسم تقنية المعلومات</a>
+        </div>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+     
+</body>
+
+
+</html>
+
+
+
+
+
+

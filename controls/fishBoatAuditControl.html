@@ -1,0 +1,318 @@
+﻿ <!--fisheries Boat-->
+<script>
+    var totalBlackPoints = 0;
+    var totalViolationWeightage = 0;
+    var RequiredAudits = new Array();
+    var isFormEidtMode = false;
+    var boatArray = [];
+    var boatRowNo = 0;
+
+    $(function () {
+        CreateAuditTemplate(Global.EstablishmentTypeID);
+        ss.InpsectionTimeSpent = new Date();
+        pleaseWait(false);
+    })
+    function GetAuditSubmittedData() {
+        var data = { AuditServiceID: Global.AuditServiceID }
+        if (parseInt(Global.AuditServiceID) <= 0) {
+            return;
+        }
+        FetchService("post", config.GetAuditDetailsForm, JSON.stringify(data), true, function (r, xhr) {
+            if (r.IsSuccess) {
+                console.log(r.ResponseData);
+                var res = r.ResponseData[0];
+                Global.EstablishmentName = res.Establishment_NameAr;
+                $('#establishmentName').html(res.Establishment_NameAr);
+                if ((res.Total_Points != null && res.Total_Points != '') || res.Audit_AnimalDeptForm.length > 0) {
+                    $('#comments_ID').val(res.Remarks);
+                    $('#btnSubmitInspection').text(Util.getTrans('_updateInspection'));
+                }
+                if (res.Audit_AnimalDeptForm.length > 0) {
+
+                    isFormEidtMode = true;
+                    $.each(res.Audit_AnimalDeptForm, function (i, v) {
+                        $('#txtComment_' + v.LookupAuditDetailID).val(v.Comments);
+                        $('#chk_' + v.LookupAuditDetailID).attr('data-updateid', v.ID);
+
+                        if (v.IsChecked) {
+                            $('#chk_' + v.LookupAuditDetailID).attr('checked', true);
+                            $('#tr_' + v.LookupAuditDetailID).css("background-color", 'rgb(236, 234, 234)');
+                            if (v.IsApplicable) {
+                                var parent = $('#chk_' + v.LookupAuditDetailID).attr('data-parent');
+                                $('#chkTop_' + parent).attr('checked', true);
+
+                                CheckboxAction(!v.IsApplicable, parent);
+                            }
+                            //totalBlackPoints -= parseInt($('#chk_' + v.LookupAuditDetailID).attr('data-blackpoints'));
+                            //totalViolationWeightage -= parseInt($('#chk_' + v.LookupAuditDetailID).attr('data-violationweightage'));
+                            //RequiredAudits.push({ id: v.LookupAuditDetailID, days: $('#chk_' + v.LookupAuditDetailID).attr('data-days') });
+                        }
+                    });
+                }
+                debugger;
+                //boatArray.forEach(function (v) {
+                //    var checkbox = $('#chkTop_' + v).prop('checked');
+                //    if (checkbox) {
+                //        var weight = $('#chkTop_' + v).attr('data-violationweightage');
+                //        totalViolationWeightage -= parseFloat(weight);
+                //    }
+                //})
+
+                for (i = 1; i <= boatRowNo; i++) {
+                    var checkbox = $('#chkTop_' + i).prop('checked');
+                    if (checkbox) {
+                        var weight = $('#chkTop_' + i).attr('data-violationweightage');
+                        totalViolationWeightage -= parseFloat(weight);
+                    }
+                }
+                UpdateTotalReult();
+                //debugger;
+                ss.ins_img = res.Audit_Attachment.length > 0 ? JSON.stringify(res.Audit_Attachment) : null;
+                GetImageControl();
+            }
+        });
+        if (Global.isAuditFormDisable) {
+            $('#btnSubmitInspection').hide();
+            $('#comments_ID').prop('disabled', true);
+            //$('#fromCreateAudit *').filter(':input').each(function (en, input) {
+            //    $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', true);
+            //});
+            $("#fromCreateAudit :input").prop("disabled", true);
+        }
+    }
+    function UpdateTotalReult() {
+        //$('#BlackPoints_ID').html(totalBlackPoints);
+        //$('#TotalWeight_ID').html(Util.RoundNumber(totalViolationWeightage));
+        $('#TotalWeight_ID').html(Util.RoundNumber(totalViolationWeightage));
+    }
+
+    function CreateAuditTemplate(estabTypeID) {
+        var row = '';
+        var html = '<table class="table table-condensed">\
+                <thead>\
+                    <tr>\
+                        <td></td>\
+                        <td><b><span data-tran="_violationOfLaw"></span></b></td>\
+                        <td><b><span data-tran="_comment"></span></b></td>\
+                    </tr>\
+                </thead>\
+                <tbody id="setTemplateTbody"></tbody>\
+            </table>';
+        $('#setTemplate').html(html);
+        var data = JSON.stringify({ "EstablishmentTypeID": estabTypeID });
+        FetchService("post", config.GetAuditsLookup, data, false, function (r, xhr) {
+            debugger;
+            $('#TopicAudit').html(r.ResponseData[0].EstablishmentTypeNameAr);
+            if (r.IsSuccess) {
+                var preParentName = ''; var perBoatNo = '';
+                debugger;
+                boatArray = Util.GetUniqueArray_JSON(r.ResponseData, "ActionTaken");
+                r.ResponseData.sort(function (a, b) {
+                    const weightDiff = Number(a.ViolationWeightage) - Number(b.ViolationWeightage);
+                    if (weightDiff !== 0) return weightDiff;
+
+                    return (a.ActionTaken || "").localeCompare(b.ActionTaken || "");
+                });
+                var Percentage = 100 / boatArray.length;
+                $.each(r.ResponseData, function (i, v) {
+                    row = '';
+                    if (v.ActionTaken != perBoatNo)
+                        boatRowNo++;
+                    v.LegislationNo = v.LegislationNo == '' ? "v" : v.LegislationNo;
+                    //debugger;
+                    var attrb = 'data-parent="' + boatRowNo + '" data-legislationno="' + v.LegislationNo + '" data-isdisableform="' + v.isDisableForm + '" data-id="' + v.ID + '" data-days="' + v.NoOfDays + '"   data-violationweightage = "' + Percentage + '" data-blackpoints= ' + v.BlackPoints + ' data-updateid=0';
+                    if (v.ViolationWeightage != preParentName) {
+                        row += '<tr id= "tr_' + i + '"> <td colspan="6" style="text-align: center; background-color: #f2efda;">\
+                        <label><span style="font-size:20px;vertical-align: bottom;">'+ v.ParentEvaluation + '</span></label>\
+                       </td></tr>';
+                        preParentName = v.ViolationWeightage;
+                    }
+                    if (v.ActionTaken != perBoatNo) {
+                        row += '<tr id= "tr_' + i + '"> <td colspan="6" style="text-align: center; background-color: #e2e2e2;">\
+                             <input type="checkbox" data-violationweightage = "' + Percentage + '" id="chkTop_' + boatRowNo + '" data-id="' + v.ID + '" data-parent="' + boatRowNo + '" class="chk-col-red"  >\
+                        <label  data-violationweightage = "' + Percentage + '" data-parent="' + boatRowNo + '" data-id="' + v.ID + '" onclick= "SelectCheckbox(this)" for="chkTop_' + boatRowNo + '">\
+                        </label><span style="font-size:18px;vertical-align: bottom;">' + v.LegislationNo + " : " + v.ActionTaken +"  " +'</span>\
+                        </td></tr>';
+                        perBoatNo = v.ActionTaken;
+                        totalViolationWeightage += parseFloat(Percentage);
+                    }
+                    row += '<tr id= "tr_' + i + '" class="tr_' + boatRowNo + '">'
+                    //row += '<td></td>';
+                    row += '<td><input type="checkbox" id="chk_' + v.ID + '" ' + attrb + ' class="chk-col-red" >\
+                        <label ' + attrb + '   for="chk_' + v.ID + '"></label></td>';
+                    row += '<td style="font-size:11px">' + v.EvaluationAr + '</td>';
+                    //row += '<td style="font-size:10px">' + v.ActionTaken + '</td>';
+                    //row += '<td style="font-size:10px">' + v.ViolationTarget + '</td>';
+                    row += '<td><textarea class="form-control" id="txtComment_' + v.ID + '" style="width: unset;" cols="20" rows="1"></textarea></td>';
+                    row += '</tr>';
+
+                    row = row.replace('null', '');
+                    row = row.replace('""', '');
+                    $('#setTemplateTbody').append(row);
+
+                    $('.tr_' + boatRowNo).find("input,textarea").prop('disabled', true);
+                    $('.tr_' + boatRowNo).css("background-color", 'rgb(236, 234, 234)');
+                    $('.tr_' + boatRowNo).hide();
+                })
+                //$('#setTemplateTbody').html(row);
+            }
+            GetAuditSubmittedData();
+        });
+    }
+
+    function SelectCheckbox(e) {
+        debugger;
+        if (!e.control.disabled) {
+            var parent = e.dataset.parent;
+            var violationWeightage = e.dataset.violationweightage;
+            var checkbox = $('#chkTop_' + parent).prop('checked');
+            CheckboxAction(checkbox, parent);
+            if (!checkbox) {
+                totalViolationWeightage -= parseFloat(violationWeightage);
+            } else {
+                totalViolationWeightage += parseFloat(violationWeightage);
+            }
+            UpdateTotalReult();
+        }
+    }
+    function CheckboxAction(checkbox, id) {
+        if (!checkbox) { //show
+            $('.tr_' + id).show();
+            // $('.tr_' + id).css("background-color", 'rgb(236, 234, 234)');
+            $.each($('.tr_' + id), function (i, v) {
+                // console.log(v);
+                $(this).css("background-color", 'white');
+                $(this).find("input,textarea").prop('disabled', false);
+            });
+        } else {
+            //$('.tr_' + id).css("background-color", 'white');
+            $('.tr_' + id).hide();
+            $.each($('.tr_' + id), function (i, v) {
+                // console.log(v);
+                $(this).css("background-color", 'rgb(236, 234, 234)');
+                $(this).find("input,textarea").prop('disabled', true);
+                $(this).find("input").prop('checked', false);
+                $(this).find("textarea").val('');
+            });
+        }
+    }
+    function SubmitInpsection() {
+        debugger;
+        if ($('#comments_ID').val().trim() == "") {
+            swal('', Util.getTrans('_requiredField'), 'warning');
+            return false;
+        }
+        var AuditDetailList = new Array();
+        $('#fromCreateAudit *').filter(':input').each(function (e, input) {
+
+            if (input.type == "checkbox" && input.id.indexOf('chkTop_') < 0) {
+                var ID = input.dataset.id;
+                var comments = $('#txtComment_' + ID).val().trim();
+                var isChecked = $('#chk_' + ID).prop('checked');
+                var inspID = $('#chk_' + ID).attr('data-inspectoredit');
+                if (isChecked || comments != "") {
+                    AuditDetailList.push({
+                        AuditServiceID: Global.AuditServiceID,
+                        LookupAuditDetailID: ID,
+                        Comments: comments,
+                        IsChecked: isChecked,
+                        IsApplicable: true,
+                        updateID: $('#chk_' + ID).attr('data-updateid'),
+                    });
+                }
+            }
+        });
+        var FormSubmitModel =
+        {
+            AuditDetailList: AuditDetailList,
+            AuditServiceID: Global.AuditServiceID
+        };
+
+        var AuditService = {
+            Inspector_ID: lsUser.UserID,
+            ID: Global.AuditServiceID,
+            GPS_Cord: lat + "," + lng,
+            //Rating: parseInt(totalViolationWeightage),
+            Remarks: $('#comments_ID').val(),
+            TimeSpent: Util.TimeSpent(ss.InpsectionTimeSpent),
+            Total_Points: parseInt(Util.RoundNumber(totalViolationWeightage)),
+            Auto_Remarks: Util.getTrans("_totalPoints") + ": " + Util.RoundNumber(totalViolationWeightage),
+            ToEmp_ID: lsUser.UserID,
+            IsEditMode: isFormEidtMode,
+            RequiredAudits: [30],
+            IsFishMarket: true,
+        };
+        FetchService('post', config.UpdateAuditsService, JSON.stringify(AuditService), true, function (r, xhr) {
+            console.log(r);
+            if (r.IsSuccess) {
+                FetchService("post", config.PostAuditDetailsForm, JSON.stringify(FormSubmitModel), true, function (r, xhr) {
+                    if (r.IsSuccess) {
+                        debugger;
+                        //var  msg = "Next visit is scheduled after 1 month ";
+                        swal(Util.getTrans('_success'), Util.getTrans('_successDone'), 'success');
+
+                        CloseModal('#model_AuditDetail');
+                        // swal(Util.getTrans('_success'), msg, 'success');
+                    } else {
+                        swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+                    }
+                })
+            } else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        });
+    }
+    function SearchText() {
+        var val = $('#txtSearch').val();
+        if (val.length > 0) {
+            Util.SearchTextFromHTMLPage(val);
+        }
+    }
+</script>
+<form id="fromCreateAudit">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <span id="TopicAudit"> </span>
+            </h1>
+            <h3 style="text-align: center;margin-top:3px" id="establishmentName"> </h3>
+            <ul class="header-dropdown m-r--5">
+                <!--<div>
+            <span data-tran="_totalBlackPoints"></span>: <b id="BlackPoints_ID">0</b>
+        </div>-->
+                <div><span data-tran="_totalWeight"></span>: <b id="TotalWeight_ID">0</b>%</div>
+            </ul>
+            <div id="HistoryDataMarkeup"></div>
+            <div class="clearfix">
+                <div class="col-md-3">
+                    <input type="text" data-tran="_search" value="" id="txtSearch" class="form-control" />
+                </div>
+                <div class="col-md-5">
+                    <button type="button" value="Search" class="btn btn-success" onclick="SearchText()"><span data-tran="_search"></span></button>
+                </div>
+            </div>
+        </div>
+        <div class="body">
+
+            <div id="setTemplate"></div>
+            <div id="ImageControl"></div>
+            <div class="">
+                <b><span data-tran="_comment"></span></b>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">text_format</i>
+                    </span>
+                    <div class="form-line">
+                        <textarea type="text" class="form-control" name="comments_ID" id="comments_ID" rows="4" cols="100" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <button id="btnSubmitInspection" type="button" onclick="SubmitInpsection(this); return false;"
+                        class="btn bg-green btn-block btn-lg waves-effect">
+                    <span data-tran="_submitInspection"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

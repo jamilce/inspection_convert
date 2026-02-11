@@ -1,0 +1,95 @@
+﻿<form id="fromNewEmployee">
+    <div class="card animated fadeIn">
+        <div class="header">
+            <h1>
+                <span data-tran="_addNewEmployee"> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5"></ul>
+        </div>
+        <div class="body">
+            <div class="demo-masked-input">
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-6  ">
+                        <b><span data-tran="_role"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="RoleID" data-placeholder="أختر" onchange="onchange_RoleID(this)"
+                                        name="RoleID" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 DeptID" style="display:none">
+                        <b><span data-tran="_department"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="DeptID" data-placeholder="أختر" onchange="onchange_ddDepartment(this)"
+                                        name="DeptID" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-3 col-md-3 col-sm-6  ManagerID" style="display:none">
+                        <b><span data-tran="_reportingManager"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ManagerID" data-placeholder="أختر"
+                                        name="ManagerID" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div> 
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_Name"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">person</i>
+                            </span>
+                            <div class="form-line">
+                                <input id="FullName" name="FullName" class="form-control" placeholder="" style="width:100%" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_email"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">mail</i>
+                            </span>
+                            <div class="form-line">
+                                <input id="UserName" name="UserName" class="form-control" placeholder="" style="width:100%" required />
+                            </div>
+                            <span class="input-group-addon" style="font-size: 9px;">@moccae.gov.ae</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6">
+                        <b><span data-tran="_jobTitle"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">short_text</i>
+                            </span>
+                            <div class="form-line">
+                                <input id="JobTitle" name="JobTitle" class="form-control" placeholder="" style="width:100%" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12">
+                        <button class="btnAdd btn bg-green waves-effect" type="button" onclick="AddNewEmployee()">
+                            <span data-tran="_add"></span>
+                        </button>
+                    </div>
+
+                </div>
+            </div>
+            <br />
+        </div>
+    </div>
+</form>

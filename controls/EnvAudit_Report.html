@@ -1,0 +1,252 @@
+﻿
+<script>
+
+    var isImportantItemSelected = false;
+    var RequiredAudits = new Array();
+    var isFormEidtMode = false;
+
+    $(function () {
+        CreateAuditTemplate(Global.EstablishmentTypeID);
+
+        ss.InpsectionTimeSpent = new Date();
+        pleaseWait(false);
+    })
+    function GetAuditSubmittedData() {
+        var data = { AuditServiceID: Global.AuditServiceID }
+        if (parseInt(Global.AuditServiceID) <= 0) {
+            return;
+        }
+
+        FetchService("post", config.GetAuditDetailsForm, JSON.stringify(data), true, function (r, xhr) {
+            debugger;
+            if (r.IsSuccess) {
+                console.log(r.ResponseData);
+                var res = r.ResponseData[0];
+                if ((res.Total_Points != null && res.Total_Points != '') || res.Audit_AnimalDeptForm.length > 0) {
+                    $('#comments_ID').val(res.Remarks);
+                    $('#btnSubmitInspection').text(Util.getTrans('_updateInspection'));
+                }
+                if (res.Audit_AnimalDeptForm.length > 0) {
+                    isFormEidtMode = true;
+                    $.each(res.Audit_AnimalDeptForm, function (i, v) {
+                        $('#txtComment_' + v.LookupAuditDetailID).val(v.Comments);
+                        $('#chkTop_' + v.LookupAuditDetailID).attr('data-updateid', v.ID);
+                        // $('#chk_' + v.LookupAuditDetailID).attr('data-updateid', v.ID);
+                        //$('#tr_' + v.LookupAuditDetailID).css("background-color", 'rgb(236, 234, 234)');
+                        if (v.IsChecked) {
+                            $('#chk_' + v.LookupAuditDetailID).attr('checked', false);
+                        }
+                        if (v.IsApplicable) {
+                            $('#chkTop_' + v.LookupAuditDetailID).attr('checked', true);
+                            $('#tr_' + v.LookupAuditDetailID).find("input,textarea,select").prop('disabled', false);
+                            $('#tr_' + v.LookupAuditDetailID).css("background-color", 'white');
+                        }
+                    });
+                }
+                debugger;
+                ss.ins_img = res.Audit_Attachment.length > 0 ? JSON.stringify(res.Audit_Attachment) : null;
+                GetImageControl();
+            }
+        });
+        if (Global.isAuditFormDisable) {
+            $('#btnSubmitInspection').hide();
+            $('#comments_ID').prop('disabled', true);
+            $('#fromCreateAudit *').filter(':input').each(function (en, input) {
+                $('#tr_' + input.dataset.id).find("input,textarea").prop('disabled', true);
+            });
+        }
+    }
+    //function UpdateTotalResult(givenPoints) {
+    //    $('.GivenPoints').html(givenPoints);
+    //    TotalPercentage = givenPoints * 100 / totalBlackPoints;
+    //    Grade = Util.getPercentageGrade(TotalPercentage)
+    //    $('.FinalEvaluation').html('<span class="finalEvalutionStyle" style="background-color:' + Util.getPercentageColor(TotalPercentage) + '"> ' +
+    //        Grade + '</span> <span>' + Util.RoundNumber(TotalPercentage) + '%</span>');
+    //}
+
+
+    function CreateAuditTemplate(estabTypeID) {
+        // debugger;
+        var row = '';
+        var html = '<table class="table table-condensed table-responsive"  >\
+                <thead>\
+                    <tr>\
+                        <td></td>\
+                        <td><b><span data-tran="_articalNo"></span></b></td>\
+                        <td><b><span data-tran="_comment"></span></b></td>\
+                    </tr>\
+                </thead>\
+                <tbody id="setTemplateTbody"></tbody>\
+            </table>';
+        $('#setTemplate').html(html);
+        var data = JSON.stringify({ "EstablishmentTypeID": estabTypeID });
+
+        FetchService("post", config.GetAuditsLookup, data, false, function (r, xhr) {
+            $('#TopicAudit').html(Util.Localize(r.ResponseData[0].EstablishmentTypeNameAr, r.ResponseData[0].EstablishmentTypeNameEn));
+            if (r.IsSuccess) {
+
+                $.each(r.ResponseData, function (i, v) {
+                    row = "";
+                    var evaluation = lsUser.inslang == "ar" ? v.EvaluationAr : v.EvaluationEn;
+                    // var attrb = 'data-id="' + v.ID + '"  data-updateid=0';
+                    if (v.LegislationNo == 0) {
+                        row += '<tr id="tr_' + v.ID + '"  >';
+                        row += '<td colspan="3" class="header-Topic">' + evaluation + '</td>';
+                        row += '</tr>';
+                    } else {
+                        row += '<tr id="tr_' + v.ID + '">';
+                        row += '<td><input type="checkbox" id="chkTop_' + v.ID + '"  data-id="' + v.ID + '" data-updateid="0" class="chk-col-brown" >\
+                        <label onclick= "SelectCheckbox(this)" for="chkTop_' + v.ID + '" data-id="' + v.ID + '"></label></td>';
+                        row += ' <td><div class="switch" >\
+                                                <label for="chk_' + v.ID + '" data-id="' + v.ID + '"> ' + evaluation + '</label>\
+                                                <label> <input name="' + v.ID + '" id="chk_' + v.ID + '" data-id="' + v.ID + '"   type="checkbox" checked >\
+                                                  <span class="lever switch-col-green inspection-checkbox"></span></label>\
+                                                </div>\
+                                         </td>';
+                        //row += '<td><input type="checkbox" id="chk_' + v.ID + '" ' + attrb + ' class="chk-col-green"  onclick= "SelectCheckbox(this)">\
+                        //    <label ' + attrb + '  for="chk_' + v.ID + '"></label></td>';
+                        // row += '<td >' + evaluation + '</td>';
+                        row += '<td><textarea class="form-control" id="txtComment_' + v.ID + '" style="width: unset;" cols="20" rows="1"></textarea></td>';
+                        row += '</tr>';
+                        row = row.replace(null, '');
+                        row = row.replace('null', '');
+                        row = row.replace('""', '');
+                    }
+                    $('#setTemplateTbody').append(row);
+                    $('#tr_' + v.ID).find("input,textarea,select").prop('disabled', true);
+                    $('#chkTop_' + v.ID).prop('disabled', false);
+                    $('#tr_' + v.ID).css("background-color", 'rgb(236, 234, 234)');
+                })
+
+
+                GetAuditSubmittedData();
+            }
+            else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        });
+    }
+
+
+
+    function SelectCheckbox(e) {
+        //debugger;
+        var id = e.dataset.id;
+        //console.log(id);
+        if ($('#chkTop_' + id).prop('checked')) {
+            $('#tr_' + id).find("input,textarea,select").prop('disabled', true);
+            $('#tr_' + id).css("background-color", 'rgb(236, 234, 234)');
+            $('#chk_' + id).prop('checked', true);
+            $('#txtComment_' + id).val('');
+
+        } else {
+            $('#tr_' + id).find("input,textarea,select").prop('disabled', false);
+            $('#tr_' + id).css("background-color", 'white');
+        }
+        //$('#chk_' + id).prop('checked', false);
+        $('#chkTop_' + id).prop('disabled', false);
+    }
+
+    function SubmitInpsection() {
+        debugger;
+
+        if ($('#comments_ID').val().trim() == "") {
+            swal('', Util.getTrans('_requiredField'), 'warning');
+            return false;
+        }
+        var AuditDetailList = new Array();
+
+        $('#fromCreateAudit *').filter(':input').each(function (e, input) {
+            if (input.type == "checkbox" && input.id.indexOf('chkTop_') > -1) {
+                var ID = input.dataset.id;
+                var comments = $('#txtComment_' + ID).val().trim();
+                var isChecked = $('#chk_' + ID).prop('checked');
+                var IsApplicable = $('#chkTop_' + ID).prop('checked');
+                if (IsApplicable) {
+                    AuditDetailList.push({
+                        AuditServiceID: Global.AuditServiceID,
+                        LookupAuditDetailID: ID,
+                        Comments: comments,
+                        IsChecked: !isChecked,
+                        IsApplicable: IsApplicable,
+                        updateID: $('#chkTop_' + ID).attr('data-updateid'),
+                        InspectorID: lsUser.UserID,
+                    });
+                }
+            }
+        })
+        var FormSubmitModel = {
+            AuditDetailList: AuditDetailList,
+            AuditServiceID: Global.AuditServiceID
+        };
+        var AuditService = {
+            Inspector_ID: lsUser.UserID,
+            ID: Global.AuditServiceID,
+            GPS_Cord: lat + "," + lng,
+            //NextVisit_Date: new Date(),
+            Rating: '',
+            Remarks: $('#comments_ID').val(),
+            TimeSpent: Util.TimeSpent(ss.InpsectionTimeSpent),
+            Total_Points: 0,
+            ToEmp_ID: lsUser.UserID,
+            IsEditMode: isFormEidtMode,
+            RequiredAudits: [],
+            IsEnviroTaqeem: true
+        };
+
+        //console.log(AuditDetailList);
+        FetchService('post', config.UpdateAuditsService, JSON.stringify(AuditService), true, function (r, xhr) {
+            console.log(r);
+            if (r.IsSuccess) {
+                FetchService("post", config.PostAuditDetailsForm, JSON.stringify(FormSubmitModel), true, function (r, xhr) {
+                    if (r.IsSuccess) {
+                        debugger;
+                        var msg = '';
+                        //swal(Util.getTrans('_success'), Util.getTrans('_successDone'), 'success');
+                        CloseModal('#model_AuditDetail');
+                        swal(Util.getTrans('_success'), msg, 'success');
+                    } else {
+                        swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+                    }
+                })
+
+            } else {
+                swal(Util.getTrans('_error'), Util.getTrans('_errorMsg'), 'error');
+            }
+        });
+
+    }
+
+</script>
+<form id="fromCreateAudit">
+    <div class="card">
+        <div class="header" style="text-align: center;">
+            <h1>
+                <span id="TopicAudit"> </span>
+            </h1>
+            <div id="HistoryDataMarkeup"></div>
+        </div>
+        <div class="body">
+
+            <div id="setTemplate"></div>
+            <div id="ImageControl"></div>
+            <div class="">
+                <b><span data-tran="_comment"></span></b>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="material-icons">text_format</i>
+                    </span>
+                    <div class="form-line">
+                        <textarea type="text" class="form-control" name="comments_ID" id="comments_ID" rows="4" cols="100" required></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <button id="btnSubmitInspection" type="button" onclick="SubmitInpsection(this); return false;"
+                        class="btn bg-green btn-block btn-lg waves-effect">
+                    <span data-tran="_submitInspection"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</form>

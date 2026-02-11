@@ -1,0 +1,149 @@
+﻿<form id="fromCreateAudit_incident">
+    <div class="card">
+        <div class="header">
+            <h1>
+                <i class="material-icons">report</i> <span data-tran="_createIncident"> </span>
+            </h1>
+            <ul class="header-dropdown m-r--5">
+                <button style="display:none" type="button" onclick="CancelUpdate(this)" class="btnCancelUpdate btn bg-red btn-circle-lg waves-effect waves-circle waves-float">
+                    <i class="material-icons">cancel</i>
+                </button>
+                <button type="button" onclick="AddNewIncident(this)" class="btn bg-brown btn-circle-lg waves-effect waves-circle waves-float">
+                    <i class="material-icons">add</i>
+                </button>
+            </ul>
+        </div>
+        <div class="body">
+            <div class="demo-masked-input">
+                <div class="row clearfix">
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 ddDepartment">
+                        <b><span data-tran="_department"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">location_city</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ddDepartment" name="DeptID" onchange="onchange_ddDepartment(this)" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 ddEmployee">
+                        <b><span data-tran="_employees"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">person</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <select class="form-control chzn-select " id="ddEmployee" name="ddEmployee" style="width:100%"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12  ">
+                        <b><span data-tran="_Name"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">title</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="ReporterName" id="txtReporterName" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12  ">
+                        <b><span data-tran="_mobileNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">phone</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="ReporterMobileNo" id="txtMobileNo" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12  ">
+                        <b><span data-tran="_email"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">email</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="Email" id="txtEmail" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 ">
+                        <b><span data-tran="_incidentNo"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">title</i><span class="pl-red">*</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="IncidentNo" id="txtIncidentNo" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12 ">
+                        <b><span data-tran="_reportSite"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">gps_not_fixed</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="IncidentSite" id="txtReportSite" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                        <b><span data-tran="_incidentTitle"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">text_fields</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="IncidentTitle" id="txtIncidentTitle" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-4 col-xs-12   ">
+                        <b><span data-tran="_date"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">date_range</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <input id="IncidentDate" name="IncidentDate" class="form-control datepicker" placeholder="" style="width:100%" required />
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <!--<div class="col-md-12">
+                        <b><span data-tran="_authorsData"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">short_text</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <textarea type="text" class="form-control" name="CommentsAuthor" id="comments_AuthorData" rows="4" cols="100" required></textarea>
+                            </div>
+                        </div>
+                    </div>-->
+                    <div class="col-md-12">
+                        <b><span data-tran="_incidnetDesciption"></span></b>
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="material-icons">short_text</i><span class="pl-red"> *</span>
+                            </span>
+                            <div class="form-line">
+                                <textarea type="text" class="form-control" name="Comments" id="comments_IncidentDescription" rows="4" cols="100" required></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
